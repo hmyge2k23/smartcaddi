@@ -1,0 +1,60 @@
+{% load static %}
+
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="{% static 'css_login/style.css' %}">
+        <link rel="stylesheet" href="{% static 'css_login/style_perso.css' %}">  
+    </head>
+
+	<body class="img js-fullheight">
+        <section class="ftco-section"> 
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-6 text-center mb-5">
+                        <h2 class="heading-section"></h2>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-md-6 col-lg-4">
+                        <div class="login-wrap p-0">
+                    <h3 class="mb-4 text-center">Connectez Vous</h3>
+                    
+                    {% if messages %}
+                        {% for message in messages %}
+                            <p style="text-align: center; font-family:Georgia, 'Times New Roman', Times, serif; font-size:medium; color:red; font-weight: bold;">{{ message }}</p>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form action="" method="POST" class="signin-form">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            {{ form.username }}
+                        </div>
+
+                        <div class="form-group" id="assword-field">
+                            {{ form.password }}
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="form-control btn btn-primary submit px-3">Connexion</button>
+                        </div>
+                    </form>
+
+                <p class="w-100 text-center">&mdash; Hello ! &mdash;</p>
+                </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    <script src="{% static 'js_login/jquery.min.js' %}"></script>
+    <script src="{% static 'js_login/popper.js' %}"></script>
+    <script src="{% static 'js_login/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js_login/main.js' %}"></script>
+	</body>
+</html>   
+

@@ -1,0 +1,378 @@
+{% extends 'body/body.html' %}
+
+{% load static %}
+{% load custom_filters %}
+
+{% block content %}
+
+	<!-- PreLoader-->
+    <div class="loader">
+        <div class="loader-inner">
+            <div class="circle"></div>
+        </div> 
+    </div>
+    <!--PreLoader Ends-->
+	
+	<!-- header -->
+	<div class="top-header-area" id="sticker" style="background-color:#07212e;">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12 col-sm-12 text-center">
+					<div class="main-menu-wrap">
+						<!-- logo -->
+						<div class="site-logo">
+							<a href="{% url 'acceuil' %}">
+								<img src="{% static 'img/logo.png' %}" alt="">
+							</a>
+						</div>
+						<!-- logo -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end header -->
+
+	
+	<!-- search area -->
+	<div class="search-area">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<span class="close-btn"><i class="fas fa-window-close"></i></span>
+					<div class="search-bar">
+						<div class="search-bar-tablecell">
+							<h3>Search For:</h3>
+							<input type="text" placeholder="Keywords">
+							<button type="submit">Search <i class="fas fa-search"></i></button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end search arewa -->
+
+	<style>
+		thead .lm th{
+			font-weight:501;
+		}
+	</style>
+
+	<!-- cart -->
+	<div class="cart-section mt-150 mb-150">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 col-md-12">
+					<div class="cart-table-wrap">
+						<table class="cart-table">
+							<thead class="cart-table-head">
+								<tr class="table-head-row lm">
+									<th class="product-image">Produit</th>
+									<th>Nom</th>
+									<th class="">Prix Unitaire</th>
+									<th>Quantité</th>
+									<th class="">Prix Total</th>
+									<th>Date fab</th>
+									<th>Date exp</th>
+									<th class="">Suppr</th>
+								</tr>
+							</thead>
+
+						
+							
+								<tbody>
+									{% for commande in commandes %}
+										<tr class="table-body-row" data-commande-id="{{ commande.id }}">
+											<td class="product-image">
+												<img src="{{ commande.produit.images.url }}" alt="">
+											</td>  
+											<td class="product-name">{{ commande.produit.nom_prod }}</td>
+											<td class="product-price">{{ commande.produit.prix }} F</td>
+											<td class="product-quantity">
+												<button class="btn btn-sm btn decrease" style="background-color:darkred;color:white;">-</button>
+												<span class="quantity-display">{{ commande.quantite }}</span>
+												<button class="btn btn-sm btn-success increase">+</button>
+											</td>
+											<td class="product-total">
+												<span class="total-price">{{ commande.produit.prix|mul:commande.quantite }} F</span>
+											</td>
+											<td>{{ commande.produit.date_fabrication|format_date }}</td>
+											<td>{{ commande.produit.date_peremption|format_date }}</td>
+											<td>
+												<a href="{% url 'del_commande' commande.id %}" style=" font-size:30px; color:darkred; cursor:pointer;" class="material-symbols-outlined">
+													delete_forever 
+												</a>
+											</td>
+										</tr> 
+									{% endfor %}
+								</tbody>
+							
+							{% if request.user.is_authenticated and not commandes %}
+								<tbody class="empty-table-body" style="background-color: #f2f2f2; text-align: center;">
+									<tr>
+										<td colspan="8" style="font-weight: bold; color:red;">VEUILLEZ SCANNER LE(S) PRODUIT(S) AVANT DE PAYER !</td>
+									</tr>
+								</tbody>
+							{% endif %}
+					
+
+							{% if not request.user.is_authenticated %}
+							<tbody class="empty-table-body" style="background-color: #f2f2f2; text-align: center;">
+								<tr>
+									<td colspan="8" style="font-weight: bold; color:red;">VEUILLEZ CONNECTEZ LA TABLETTE AVANT DE SCANNER !</td>
+								</tr>
+							</tbody>
+							{% endif %} 										
+						</table>
+
+						<div class="row justify-content-center mt-4">
+
+							{% if request.user.is_authenticated %}
+							<!-- Bouton pour scanner un produit à ajouter -->
+							<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#qrCodeAddModal"
+								style="text-decoration: none;
+								border: none;
+								border-radius: 20px;
+								width: 200px;
+								font-family: 'Poppins', sans-serif;
+								display: inline-block;
+								background-color: #F28123;
+								color: #fff;
+								padding: 10px;
+								font-weight:600;
+								">
+								Scanner votre produit
+							</button>
+							{% endif %}    
+							
+
+
+							<!-- Modal pour le scan d'ajout de produit -->
+							<div class="modal fade" id="qrCodeAddModal" tabindex="-1" role="dialog" aria-labelledby="qrCodeAddModalLabel" aria-hidden="true">
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title" id="qrCodeAddModalLabel">Scan QR Code</h5>
+											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+										</div>
+										<div class="modal-body">
+											<div id="reader-add" style="width: 100%; height: 325px;"></div>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-lg-4">
+					<div class="total-section">
+						
+						<form method="POST" action="{% url 'send_total' %}">
+							{% csrf_token %}
+							<table class="total-table">
+								<thead class="total-table-head">
+									<tr class="table-total-row">
+										<th style="font-weight:501;">Total :</th>
+										<th class="somme_prix"></th>
+									</tr>
+								</thead>
+							</table>
+							<input type="hidden" name="to" value="">
+								<div class="cart-buttons">
+									<button type="submit" style="border-radius: 20px; background-color:#F28123; color:white; border: none; padding: 10px; font-family: 'Poppins', sans-serif; width: 170px;">
+										Confirmer  
+									</button>
+								</div>
+						</form>
+					
+
+						{% if request.user.is_authenticated and commandes %}
+						<form method="POST" action="{% url 'del_cart' %}">
+							{% csrf_token %}
+							<div class="cart-buttons">
+								<button style="border-radius: 20px; background-color:#F28123; color:white; border: none; padding: 10px; font-family: 'Poppins', sans-serif; width: 170px;">
+									Vider le panier  
+								</button>
+							</div>
+						</form>
+						{% endif %}
+					</div>
+				</div>
+
+			</div>    
+		</div>
+	</div>
+	<!-- end cart -->
+	
+	
+	
+	
+	<!-- copyright -->
+	<div class="copyright">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6 col-md-12">
+					<p>Copyrights &copy; 2023 ,  Tous droits réservés.<br>
+					</p>
+				</div>
+				<div class="col-lg-6 text-right col-md-12">
+					<div class="social-icons">
+						<ul>
+							<li><a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
+							<li><a href="#" target="_blank"><i class="fab fa-twitter"></i></a></li>
+							<li><a href="#" target="_blank"><i class="fab fa-instagram"></i></a></li>
+							<li><a href="#" target="_blank"><i class="fab fa-linkedin"></i></a></li>
+							<li><a href="#" target="_blank"><i class="fab fa-dribbble"></i></a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end copyright -->
+
+
+	<!-- Js -->		
+        
+    
+
+
+	<script>
+		$(document).ready(function() {
+			let html5QrCode = null; 
+			let qrCodeTimer = null;
+		
+
+			// Gestion des Prix en fonction de la quantité
+			function updateTotalPrice() {
+				var totalPrice = 0;
+				$('.table-body-row').each(function() {
+					var priceString = $(this).find('.total-price').text().trim();
+					var price = parseFloat(priceString.replace('F', '').replace(',', '.'));
+					totalPrice += price;
+				});
+				$('.somme_prix').text(totalPrice.toFixed(2) + ' F');
+				$('input[name="to"]').val(totalPrice.toFixed(2));
+			}
+			// Initialiser la somme des prix au chargement de la page
+			updateTotalPrice();
+
+			$('.increase').click(function(){
+				var row = $(this).closest('.table-body-row');
+				var quantityDisplay = row.find('.quantity-display');
+				var quantity = parseInt(quantityDisplay.text());
+				var commandeId = row.data('commande-id');
+				
+				// Envoyer la mise à jour au backend via AJAX
+				updateQuantity(commandeId, quantity + 1);
+			});
+			
+			$('.decrease').click(function(){
+				var row = $(this).closest('.table-body-row');
+				var quantityDisplay = row.find('.quantity-display');
+				var quantity = parseInt(quantityDisplay.text());
+				var commandeId = row.data('commande-id');
+				
+				if (quantity > 1) { // Empêche la quantité d'être inférieure à 1
+					// Envoyer la mise à jour au backend via AJAX
+					updateQuantity(commandeId, quantity - 1);
+				}
+			});
+			
+
+			function updateQuantity(commandeId, quantity) {
+				$.ajax({
+					url: '{% url "update_commande_quantity" %}',
+					method: 'POST',
+					data: {
+						'commande_id': commandeId,
+						'quantity': quantity,
+						'csrfmiddlewaretoken': '{{ csrf_token }}'
+					},
+					success: function(response) {
+						// Mettre à jour la quantité affichée
+						var row = $('.table-body-row[data-commande-id="' + commandeId + '"]');
+						row.find('.quantity-display').text(quantity);
+						
+						// Mettre à jour le prix total affiché
+						var totalPriceElement = row.find('.total-price');
+						totalPriceElement.text(response.total_price.toFixed(2) + ' F');
+						
+						// Mettre à jour la somme des prix totaux
+						updateTotalPrice();
+						
+						console.log('Quantité mise à jour avec succès.');
+					},
+					error: function(error) {
+						console.log('Erreur lors de la mise à jour de la quantité:', error);
+					}
+				});
+			}
+			
+			
+			// Scanner de code QR
+			$('#qrCodeAddModal').on('shown.bs.modal', function (e) {
+				html5QrCode = new Html5Qrcode("reader-add");
+				html5QrCode.start({ facingMode: "environment" }, {
+					fps: 10,
+					qrbox: {
+						width: 250,
+						height: 250,
+					}
+				}, function(decodedText, decodedResult) {
+					console.log("QR Code scanned successfully:", decodedText);
+
+					// Envoyer decodedText à l'URL spécifiée
+					$.ajax({
+							url: "{% url 'ajout_panier' %}", // Utilisation de l'URL Django
+							type: 'POST',
+							data: {
+								'decodedText': decodedText,  // Inclure decodedText dans les données
+								csrfmiddlewaretoken: csrftoken  // Ajouter le jeton CSRF
+							},    
+							dataType: 'json',
+							success: function(response) {
+								window.location.href = "{% url 'commander' %}";
+							},
+							error: function(xhr, status, error) {
+								// Gérer les erreurs de requête AJAX ici
+								console.error(error);
+							}
+						});
+
+						// Gérez le texte décodé ici
+						clearInterval(qrCodeTimer); // Arrête le timer
+						html5QrCode.stop();
+						html5QrCode = null;
+						$('#qrCodeAddModal').modal('hide');
+					});
+		
+					// Configurer un timer pour vérifier si aucun lien n'est récupéré dans un délai donné
+					qrCodeTimer = setTimeout(function() {
+						// Si aucun lien n'est récupéré, afficher un message
+						let messageElement = document.createElement('div');
+						messageElement.classList.add('alert', 'alert-warning', 'mt-3');
+						messageElement.textContent = "Ce patient n'a été enrégistré. Veuillez réessayer.";
+						document.getElementById('qrCodeAddModal').appendChild(messageElement);
+					}, 10000); // 10000 millisecondes = 10 secondes
+				});
+		
+				$('#qrCodeAddModal').on('hidden.bs.modal', function (e) {
+					if (html5QrCode) {
+						html5QrCode.stop(); // Arrêtez le scanner lorsque le modal est fermé
+						html5QrCode = null; // Réinitialisez la variable html5QrCode
+						clearInterval(qrCodeTimer); // Arrête le timer si le modal est fermé avant que le lien soit récupéré
+					}
+				});
+			});
+	</script>
+
+	
+		 
+{% endblock %}  

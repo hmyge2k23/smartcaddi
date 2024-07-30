@@ -1,0 +1,107 @@
+{% extends 'body/body.html' %}
+{% load static %}
+
+
+{% block content %}
+	<!-- PreLoader-->
+    <div class="loader">
+        <div class="loader-inner">
+            <div class="circle"></div>
+        </div> 
+    </div>
+    <!--PreLoader Ends-->
+	
+	<!-- header -->
+	<div class="top-header-area" id="sticker" style="background-color:#07212e;">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12 col-sm-12 text-center">
+					<div class="main-menu-wrap" style="display:flex; justify-content:space-between; align-items:center;">
+						<!-- logo -->
+						<div class="site-logo">
+							<a href="{% url 'acceuil' %}">
+								<img src="{% static 'img/logo.png' %}" alt="">
+							</a>
+						</div>
+						<!-- logo -->
+
+                        <!--LogOut-->
+                        <a href="{% url 'logout' %}" style="background-color: rgb(226, 150, 43); padding:0.5rem 1rem; border-radius:1.2rem; display: flex; justify-content: center; align-items: center; width:8 0px">
+                            <box-icon name='power-off'>Déconnexion</box-icon>
+                        </a>
+
+                        <!--Login-->
+                        <a href="{% url 'login' %}" style="background-color: rgb(226, 150, 43); padding:0.5rem 1rem; border-radius:1.2rem; display: flex; justify-content: center; align-items: center; width:70px">
+                            <box-icon name='log-in-circle' type='solid' >Connexion</box-icon>
+                        </a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end header -->
+    <!-- search area -->
+    <div class="search-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <span class="close-btn"><i class="fas fa-window-close"></i></span>
+                    <div class="search-bar">
+                        <div class="search-bar-tablecell">
+                            <h3>Search For:</h3>
+                            <input type="text" placeholder="Keywords">
+                            <button type="submit">Search <i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end search area -->
+    
+    <!-- hero area -->
+    <div class="hero-area hero-bg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-9 offset-lg-2 text-center">
+                    <div class="hero-text">
+                        <div class="hero-text-tablecell">
+                            <p class="subtitle">Facilité & Efficacité</p>
+                            <h1>BIENVENUE {{user_name}} !</h1>
+                            <div class="hero-btns">
+                                <a style="text-decoration:none;" href="{% url 'commander' %}" class="boxed-btn"><b>COMMANDER</b></a>
+                                <a style="text-decoration:none;" href="contact.html" class="bordered-btn"><b>VISITE GUIDEE</b></a>                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end hero area -->
+
+    <!-- copyright -->
+    <div class="copyright">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 col-md-12">
+                    <p>Copyrights &copy; 2023 ,  Tous droits réservés.<br>
+                    </p>
+                </div>
+                <div class="col-lg-6 text-right col-md-12">
+                    <div class="social-icons">
+                        <ul>
+                            <li><a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
+                            <li><a href="#" target="_blank"><i class="fab fa-twitter"></i></a></li>
+                            <li><a href="#" target="_blank"><i class="fab fa-instagram"></i></a></li>
+                            <li><a href="#" target="_blank"><i class="fab fa-linkedin"></i></a></li>
+                            <li><a href="#" target="_blank"><i class="fab fa-dribbble"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- end copyright -->    
+
+{% endblock %}

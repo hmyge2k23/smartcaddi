@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supermarché - Validation de Paiement</title>
+    <link rel="stylesheet" href="style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f4f4f4;
+    position: relative;
+    overflow: hidden;
+    padding: 10px;
+}
+
+h2 {
+    color: rgb(7, 33, 46);
+    font-size: 36px;
+    margin-bottom: 10px;
+    font-family: 'Algerian', sans-serif;
+    animation: textFadeIn 1.8s ease-in-out;
+    text-shadow: 2px 2px 4px rgba(10, 41, 63, 0.883);
+}
+
+.hidden {
+    display: none;
+}
+
+#verification-section {
+    margin-top: 20px;
+}
+
+.verification-code {
+    font-size: 8vw; /* Utilisation de vw pour une taille de police responsive */
+    color: black;
+    font-weight: bold;
+    background-color: #04b92c;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    margin-top: 10px;
+    animation: fadeIn 2s ease-in-out;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes textFadeIn {
+    0% { opacity: 0; transform: translateY(-20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+#back-icon-container {
+    position: absolute;
+    top: 20px; /* Vous pouvez ajuster cette valeur selon vos besoins */
+    left: 10px; /* Ajustez la position gauche */
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#back-icon {
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    font-size: 40px; /* Augmentez la taille du bouton */
+    color: #003366;
+    padding: 12px; /* Ajustez le padding pour un bouton plus grand */
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    #back-icon-container {
+        left: 5px; /* Ajustez la position gauche pour les écrans plus petits */
+    }
+}
+
+#back-icon-container:hover #back-icon {
+    color: #000;
+    transform: scale(1.1);
+}
+
+.container {
+    text-align: center;
+    background-color: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 40px;
+    animation: slideIn 1s ease-out;
+    width: 90%;
+    max-width: 500px;
+}
+
+@keyframes slideIn {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+        padding: 20px;
+    }
+    h2 {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 480px) {
+    h2 {
+        font-size: 24px;
+    }
+    .verification-code {
+        font-size: 12vw;
+        padding: 10px;
+    }
+    #back-icon {
+        font-size: 30px;
+      padding: 8px;
+    }
+}  
+
+
+
+/* Boîte de dialogue */
+.dialog-content {
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+}
+
+.dialog-buttons {
+    margin-top: 20px;
+}
+
+.dialog-btn {
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.green-btn {
+    background-color: #4caf50;
+    color: white;
+}
+
+.red-btn {
+    background-color: #f44336;
+    color: white;
+    margin-right: 10px;
+}
+
+.hidden {
+    display: none;
+}
+</style>
+
+<body>
+    <div class="container">
+        <div id="verification-section">
+            <h2>Code de Vérification</h2>
+            <p id="code" class="verification-code">{{ code_reçu }}</p>
+            <img src="{{ request.session.qr_image_url}}" alt="QR Code">
+        </div>
+    </div>
+    <div id="back-icon-container" onclick="showConfirmation()">
+        <i id="back-icon" class='bx bx-arrow-back'></i>
+    </div>
+
+    <!-- Boîte de dialogue de confirmation -->
+    <div id="confirmationDialog" class="hidden">
+        <div class="dialog-content">
+            <p style="font-style: oblique;">Voulez-vous effectuer un autre paiement ?</p>
+            <div class="dialog-buttons">
+                <button class="dialog-btn green-btn" onclick="redirectToPage()">Oui</button>
+                <button class="dialog-btn red-btn" onclick="hideConfirmation()">Non</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showConfirmation() {
+            var confirmationDialog = document.getElementById('confirmationDialog');
+            confirmationDialog.classList.remove('hidden');
+        }
+
+        function hideConfirmation() {
+            var confirmationDialog = document.getElementById('confirmationDialog');
+            confirmationDialog.classList.add('hidden');
+        }
+
+        function redirectToPage() {
+
+            var confirmationDialog = document.getElementById('confirmationDialog');
+            confirmationDialog.classList.add('hidden');
+
+            var url = "{% url 'delete_var_session' %}"; 
+            window.location.href = url;
+        }
+    </script>
+</body>
+</html>  

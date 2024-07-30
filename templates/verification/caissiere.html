@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interface Caissière</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
+    <style>
+        .container {
+            margin-top: 50px;
+        }
+        .list-group-item.checked {
+            background-color: #c8e6c9 !important; /* Couleur verte pour les éléments cochés */
+        }
+        .list-group-item.unchecked {
+            background-color: #ffcdd2 !important; /* Couleur rouge pour les éléments non cochés */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Validation des Commandes</h2>
+        <div class="form-group">
+            <label for="paymentCode">Code de Paiement :</label>
+            <input type="text" class="form-control" id="paymentCode" placeholder="Entrez le code de paiement">
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" onclick="fetchOrders()">Afficher les Commandes Payées</button>
+        </div>
+        <div id="ordersList" class="mt-4">
+            <!-- Liste des commandes payées -->
+            <ul class="list-group">
+                <!-- Les éléments de la liste seront ajoutés ici dynamiquement -->
+            </ul>
+        </div>
+        <div class="form-group mt-4">
+            <button class="btn btn-success" onclick="validateOrders()">Valider</button>
+        </div>
+    </div>
+
+    <!-- Pop-up pour afficher le résultat -->
+    <div id="popup" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Validation des Commandes</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div id="popupBody" class="modal-body">
+                    <!-- Contenu du pop-up affichant le résultat -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function fetchOrders() {
+            var paymentCode = document.getElementById('paymentCode').value;
+            // Faites une requête AJAX pour récupérer les commandes associées au paiement
+            $.ajax({
+                url: '/fetch-orders/', // Endpoint à définir dans Django
+                method: 'POST',
+                data: {
+                    'payment_code': paymentCode,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}' // Assurez-vous d'inclure le token CSRF
+                },
+                success: function(response) {
+                    var ordersList = document.getElementById('ordersList');
+                    ordersList.innerHTML = ''; // Réinitialise la liste des commandes
+
+                    if (response && response.orders) {
+                        response.orders.forEach(function(order) {
+                            var listItem = '<li class="list-group-item unchecked" data-order-id="' + order.id + '" onclick="toggleCheck(this)">' + order.name + '</li>';
+                            ordersList.innerHTML += listItem;
+                        });
+                    }
+                },
+                error: function(error) {
+                    console.error('Erreur lors de la récupération des commandes :', error);
+                }
+            });
+        }
+
+        function toggleCheck(element) {
+            if (element.classList.contains('checked')) {
+                element.classList.remove('checked');
+                element.classList.add('unchecked');
+            } else {
+                element.classList.remove('unchecked');
+                element.classList.add('checked');
+            }
+        }
+
+        function validateOrders() {
+            var checkedItems = document.querySelectorAll('.list-group-item.checked');
+            var uncheckedItems = document.querySelectorAll('.list-group-item.unchecked');
+
+            // Affiche le pop-up avec le résultat
+            var popupBody = document.getElementById('popupBody');
+            popupBody.innerHTML = '<p>Commandes validées : ' + checkedItems.length + '</p><p>Commandes non validées : ' + uncheckedItems.length + '</p>';
+            $('#popup').modal('show'); // Affiche le pop-up modal
+
+            // Optionnel : Envoyer une requête pour marquer les commandes comme validées côté serveur
+            var checkedIds = Array.from(checkedItems).map(item => item.getAttribute('data-order-id'));
+            console.log('Commandes validées :', checkedIds);
+        }
+    </script>
+</body>
+</html>

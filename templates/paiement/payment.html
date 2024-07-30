@@ -1,0 +1,40 @@
+{% extends "body/body.html" %}
+
+{% block headAPI %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var amount = '{{ total_amount }}';
+        var callbackUrl = "http://127.0.0.1:8000/commander/kkiapay/callback/"; // Modifier avec votre URL locale
+        var transactionData = "{{ request.user.id }}";
+        var apiKey = "37461a30244111efa4d6f74ba7c319a6";
+        email = "jean.mangoua225@gmail.com"
+        
+        paymentmethod = "momo";
+        
+        var script = document.createElement('script');
+        script.src = "https://cdn.kkiapay.me/k.js";
+        script.setAttribute("amount", amount);
+        script.setAttribute("email", email);
+        script.setAttribute("paymentmethod", paymentmethod); 
+        script.setAttribute("callback", callbackUrl);
+        script.setAttribute("data", transactionData);
+        script.setAttribute("position", "right");
+        script.setAttribute("theme", "#07212E");
+        script.setAttribute("sandbox", "true");
+        script.setAttribute("key", apiKey);
+    
+        document.body.appendChild(script);
+    });
+</script>
+{% endblock %}
+
+
+{% block content %}
+
+    <h1>Payer maintenant</h1>
+    
+    <button  class="kkiapay-button" type="submit" style="border-radius: 20px; background-color:#F28123; color:white; border: none; padding: 10px; font-family: 'Poppins', sans-serif; width: 200px;">
+        payer  
+    </button>
+{% endblock %}
+

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fr">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<meta name="csrf-token" content="{{ csrf_token }}">
+	
+	<!-- title --> 
+	<title>Fruitkha</title> 
+	<!-- favicon -->
+	<link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.png' %}">
+	<!-- google font -->
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Poppins:400,700&display=swap" rel="stylesheet">
+	<!-- fontawesome -->
+	<link rel="stylesheet" href="{% static 'css/all.min.css' %}">
+	<!-- bootstrap -->
+	<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+	<!-- owl carousel -->
+	<link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}">
+	<!-- magnific popup -->
+	<link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+	<!-- animate css -->
+	<link rel="stylesheet" href=" {% static 'css/animate.css' %}">
+	<!-- mean menu css -->
+	<link rel="stylesheet" href=" {% static 'css/meanmenu.min.css' %} ">
+	<!-- main style -->
+	<link rel="stylesheet" href=" {% static 'css/main.css' %}">
+	<!-- responsive -->
+	<link rel="stylesheet" href=" {% static 'css/responsive.css' %}">
+	<!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+	<!-- Icon CSS-->
+	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+	{% block headAPI %}
+	{% endblock %}
+	<!-- jQuery -->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+	<!-- html5-qrcode -->
+    <script src="https://unpkg.com/html5-qrcode@2.2.0/html5-qrcode.min.js" type="text/javascript"></script>
+	<!--Google font-->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"/>
+	<!-- QR code -->
+	<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+</head> 
+
+
+<body> 
+
+	<!--CsrfToken-->
+	<script>
+		// Fonction pour obtenir le token CSRF depuis le cookie
+		function getCookie(name) {
+			var cookieValue = null;
+			if (document.cookie && document.cookie !== '') {
+				var cookies = document.cookie.split(';');
+				for (var i = 0; i < cookies.length; i++) {
+					var cookie = cookies[i].trim();
+					if (cookie.substring(0, name.length + 1) === (name + '=')) {
+						cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+						break;
+					}
+				}
+			}
+			return cookieValue;
+		}
+
+		var csrftoken = getCookie('csrftoken');
+	</script>
+
+	{% block content %}
+	{% endblock %}	
+	
+	<!--icon-->
+	<script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+	<!-- jquery -->
+	<script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
+	<!-- bootstrap -->
+	<script src=" {% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+	<!-- count down -->
+	<script src=" {% static 'js/jquery.countdown.js' %}"></script>
+	<!-- isotope -->
+	<script src=" {% static 'js/jquery.isotope-3.0.6.min.js' %}"></script>
+	<!-- waypoints -->
+	<script src=" {% static 'js/waypoints.js' %}"></script>
+	<!-- owl carousel -->
+	<script src=" {% static 'js/owl.carousel.min.js' %}"></script>
+	<!-- magnific popup -->
+	<script src=" {% static 'js/jquery.magnific-popup.min.js' %}"></script>
+	<!-- mean menu -->
+	<script src=" {% static 'js/jquery.meanmenu.min.js' %}"></script>
+	<!-- sticker js -->
+	<script src=" {% static 'js/sticker.js' %}"></script>
+	<!-- main js -->
+	<script src=" {% static 'js/main.js' %}"></script>
+</body>
+</html> 

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Alert Box</title>
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f2f2f2;
+    }
+
+    .custom-alert {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      border: 1px solid #ccc;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 40px;   
+      text-align: center; 
+      border-radius: 10px; 
+      transition: all 0.3s ease-in-out;
+      opacity: 0;
+      z-index: 1000;
+    }
+
+    .custom-alert.show {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.05);
+    }
+
+    .alert-content {
+      text-align: center;
+    }
+
+    h2 {
+      color: #333;
+      font-size: 36px;
+      margin-bottom: 10px;
+    }
+
+    button.alert-btn {
+      margin-top: 20px;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    button.alert-btn:hover {
+      background-color: #45a049;
+    }
+
+    .alert-content i {
+      font-size: 100px;
+      color: #fff;
+      padding: 20px 30px;
+      border-radius: 50%;
+      margin-bottom: 20px;
+    }
+
+    .success-icon {
+      background-color: #4CAF50;
+    }
+
+    .error-icon {
+      background-color: #f44336;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -60%); }
+      to { opacity: 1; transform: translate(-50%, -50%); }
+    }
+
+    @keyframes fadeOut {
+      from { opacity: 1; transform: translate(-50%, -50%); }
+      to { opacity: 0; transform: translate(-50%, -60%); }
+    }
+
+    .custom-alert.fade-in {
+      animation: fadeIn 0.5s forwards;
+    }
+
+    .custom-alert.fade-out {
+      animation: fadeOut 0.5s forwards;
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- SUCCES -->
+  <div class="custom-alert" id="successAlert">
+    <div class="alert-content">
+      <i class='bx bxs-check-circle success-icon'></i>
+      <h2>Paiement Réussi</h2>
+      <p>Votre paiement a été validé avec succès.</p>
+      <p>Code de vérification: <span id="verificationCode"></span></p>
+      <button class="alert-btn" onclick="redirectToPage()">OK</button>
+    </div>
+  </div>
+
+  <!-- ECHEC -->
+  <div class="custom-alert" id="errorAlert">
+    <div class="alert-content">
+      <i class='bx bxs-error-circle error-icon'></i>
+      <h2>Paiement Échoué</h2>
+      <p>Votre paiement a échoué. Veuillez réessayer.</p>
+      <button class="alert-btn">OK</button>
+    </div>
+  </div>
+
+
+  <script>
+    function showAlert(alertId, codeVerification) {
+      var alertBox = document.getElementById(alertId);
+      alertBox.style.display = 'block';
+      alertBox.classList.add('fade-in');
+
+      if (alertId === 'successAlert') {
+        document.getElementById('verificationCode').textContent = codeVerification;
+      } 
+    }
+
+    // Redirection vers la page Reçu
+    function redirectToPage() {
+      var url = "{% url 'code_client' %}";
+      window.location.href = url; // Redirige vers la nouvelle page avec le paramètre
+    }
+    
+    // Exemple de déclenchement des alertes basé sur la réponse du backend
+    window.onload = function() {
+      var status = "{{ status }}";
+      var codeVerification = "{{ code_verification }}";
+
+      if (status === 'success') {
+        showAlert('successAlert', codeVerification);
+      } else if (status === 'failed') {
+        showAlert('errorAlert', null);
+      }
+    };  
+  </script>
+
+</body>
+</html> 

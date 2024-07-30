@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Requête incorrecte</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #07212E;
+            color: #F28123;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 5em;
+            margin: 0;
+        }
+
+        p {
+            font-size: 1.5em;
+            margin: 10px 0 20px;
+        }
+
+        .container {
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .emoji {
+            font-size: 10em;
+            animation: shake 1.5s infinite;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            50% { transform: translateX(10px); }
+            75% { transform: translateX(-10px); }
+        }
+
+        .back-button {
+            padding: 10px 20px;
+            font-size: 1em;
+            color: #07212E;
+            background-color: #F28123;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            background-color: #d1691d;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="emoji">😵</div>
+        <h1>400</h1>
+        <p>Oups! Votre requête est incorrecte.</p>
+        <a href="{% url 'acceuil' %}" class="back-button">Retour à l'accueil</a>
+    </div>
+</body>
+</html>
