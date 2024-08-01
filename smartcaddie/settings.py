@@ -139,16 +139,14 @@ USE_TZ = True
 STATIC_URL = 'assets/'
 django_heroku.settings(locals())
 # l'endroit où se trouve mes fichiers quand DEBUG = True
-# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 # Chemin où mes fichiers static sont stockés quand DEBUG = False
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static_cdn') 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_cdn') 
 
 # L'url qui sert les images Exemple ( /img/exemple.jpg )
-# MEDIA_URL = '/img/'
-
+MEDIA_URL = '/img/'
 # Chemin où mes images seront stockés
-# MEDIA_ROOT = os.path.join(BASE_DIR, 'media_cdn') 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media_cdn') 
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
