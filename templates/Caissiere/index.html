@@ -1,0 +1,153 @@
+{% load static %}
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'css/caissiere.css' %}"/>
+    <title>Supermarché - Caissière</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <header style="display: flex; justify-content: space-between; align-items: center;">
+      <div class="logo">
+        <a href="{% url 'caiss_home' %}">
+          <img src="{% static 'img/logo3.png' %}" alt="" style="width: 60px;">
+        </a>
+      </div>
+      <div class="profile">
+        <div class="info">
+          <p>Hey, <b>{{request.user.username}}</b></p>
+          <small class="text-muted">Caissière</small>
+        </div>
+        <div class="profile_uuy">
+          <img
+            src="{% static 'assets_dash/images/profil1.jpg' %}"
+            alt="User Profile"
+            class="user-pic"
+            onclick="toggleMenu()"
+          />
+        </div>
+      </div>
+    </header>
+
+    <div class="wrapper">
+      <!-- Main Content -->
+      <div class="container">
+        <a href="{% url 'caiss_home' %}">
+          <img src="{% static 'img/relaod.png' %}" style="width: 40px;" alt="">
+        </a>
+        <h2>Gestion des Produits - Supermarché</h2>
+        <form action="" method="POST">
+            {% csrf_token %}
+          <input
+            type="search"
+            id="maRecherche"
+            name="code_verification"
+            placeholder="Rechercher un produit..."
+            size="30"
+          />
+          <button>Rechercher</button>
+        </form>
+
+        {% if paiement %}
+        <h2>Nom : {{ paiement.nom_du_client }}</h2>
+        <h3>{{paiement.date}}</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Produits</th>
+                    <th>Qte</th>
+                    <th>P.U</th>
+                    <th>Montant</th>
+                    <th>Date exp°</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for commande in commandes %}
+                <tr>
+                    <td class="product-info">
+                        <span>{{ commande.produit.nom_prod }}</span>
+                    </td>
+                        <td>{{ commande.quantite }}x</td>
+                    
+                    <td>{{ commande.produit.prix }} FCFA</td>
+                    <td>{{ commande.produit.prix |mul:commande.quantite }} FCFA</td>
+                    <td>{{ commande.produit.date_peremption|date:"d M Y" }}</td>
+                </tr>
+                {% endfor %}  
+                <tr class="total-row">
+                  <td style="border-bottom: none;"></td>
+                  <td class="produit_total" style="background-color: #051922; color: white;">{{total_quantity}}x</td>
+                  <td style="border-bottom: none;"></td>
+                  <td class="montant_total" style="background-color: #051922; color: white;">{{paiement.montant_paie}} FCFA</td>
+                  <td class="vide"></td>
+                </tr>           
+            </tbody>
+        </table>
+        {% elif error %}
+            <p style="font-weight: bolder; color:red;" >{{ error }}</p>
+        {% endif %}
+
+        <div class="btn">
+          <button>
+            <a href="{% url 'caiss_reçu' %}" style="text-decoration: none; color: white;">Générer le reçu</a>
+        </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sub-menu-wrap" id="subMenu">
+      <div class="sub-menu">
+        
+        <div class="user_info">
+          <img src="{% static 'assets_dash/images/profil1.jpg' %}" alt="User Picture" />
+          <h2>{{request.user.first_name}}</h2>
+        </div>
+        <hr/>
+
+        <a href="{% url 'caiss_history' %}" class="sub-menu-link">
+          <img src="{% static 'img/scroll.jpg'%}" alt="Logout Icon" />
+          <p>Historique</p>
+          <span>></span>
+        </a>
+
+        <a href="{% url 'logout' %}" class="sub-menu-link">
+          <img src="{% static 'img/logout.jpg' %}" alt="Logout Icon" />
+          <p>Déconnexion</p>
+          <span>></span>
+        </a>
+      </div>
+    </div>
+    
+    <script>
+      function toggleMenu() {
+        var subMenu = document.getElementById("subMenu");
+        subMenu.classList.toggle("open-menu");
+      }
+
+      window.onclick = function (event) {
+        var subMenu = document.getElementById("subMenu");
+        if (!event.target.matches(".user-pic")) {
+          if (subMenu.classList.contains("open-menu")) {
+            subMenu.classList.remove("open-menu");
+          }
+        }
+      };
+
+    // Empêcher d'accéder à la Page avec le bouton Retour du Navigateur
+    window.onpageshow = function(event) {
+      if (event.persisted) {
+        window.location.reload();
+      }
+    };
+    </script>
+  </body>
+</html>

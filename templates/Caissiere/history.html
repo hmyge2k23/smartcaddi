@@ -1,0 +1,295 @@
+{% load static %}
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'css/history.css' %}" />
+    <title>Historique des Tickets</title>
+
+    <style>
+        /* Styles pour le tableau */
+.ticket-table, .ticket-table th, .ticket-table td {
+    border: 1px solid #ddd; /* Bordure pour les cellules */
+    border-collapse: collapse; /* Supprimer l'espace entre les bordures */
+} 
+
+.ticket-table {
+    width: 100%; /* Prend toute la largeur */
+    margin-top: 20px; /* Espacement au-dessus du tableau */
+    border-radius: 8px; /* Coins arrondis */
+    overflow: hidden; /* Évite les débordements */
+}
+
+.ticket-table th {
+    background-color: #051922; /* Couleur de fond verte pour les en-têtes */
+    color: white; /* Couleur du texte */
+    padding: 12px; /* Espacement interne */
+    text-align: left; /* Alignement à gauche */
+}
+
+.ticket-table td {
+    padding: 10px; /* Espacement interne */
+    text-align: left; /* Alignement à gauche */
+    background-color: #f9f9f9; /* Couleur de fond pour les cellules */
+}
+
+.ticket-table tr:hover {
+    background-color: #f1f1f1; /* Changement de couleur au survol */
+}
+
+/* Styles pour le popup */
+.modal-content {
+    border-radius: 8px; /* Coins arrondis pour le contenu de la modale */
+}
+
+
+    </style>
+</head>
+<body>
+    <header style="display: flex; justify-content: space-between; align-items: center;"> 
+      <div class="logo">
+        <a href="{% url 'caiss_home' %}">
+          <img src="{% static 'img/logo3.png' %}" alt="" style="width: 60px;">
+        </a>
+      </div>
+        <div class="profile">
+            <div class="info">
+                <p>Hey, <b>{{request.user.username}}</b></p>
+                <small class="text-muted">Caissière</small>
+            </div>
+            <div class="profile_uuy">
+                <img src="{% static 'img/round.jpg' %}" alt="User Profile" class="user-pic" id="user-pic" tabindex="0" onclick="toggleMenu()"/>
+            </div>
+        </div>
+    </header>
+
+    
+    <nav class="sub-menu-wrap" id="subMenu" role="menu" aria-hidden="true">
+        <div class="sub-menu">
+          <div class="user_info">
+            <img src="{% static 'img/round.jpg' %}" alt="User Picture" class="user-info-pic" />
+            <h2>{{request.user.first_name}}</h2>
+          </div>
+          <hr/>
+          <a href="{% url 'caiss_history' %}" class="sub-menu-link" role="menuitem">
+            <img src="{% static 'img/scroll.jpg' %}" alt="Historique Icon" />
+            <p>Historique</p>
+            <span>></span>
+          </a>
+          <a href="{% url 'logout' %}" class="sub-menu-link" role="menuitem">
+            <img src="{% static 'img/logout.jpg' %}" alt="Logout Icon" />
+            <p>Déconnexion</p>
+            <span>></span>
+          </a>
+        </div>
+    </nav>
+
+
+    <div class="history">
+        <a href="{% url 'caiss_history' %}">
+            <img src="{% static 'img/relaod.png' %}" style="width: 40px;" alt="">
+        </a>
+        <h1>Historique des Tickets</h1>
+        <section aria-labelledby="historique-des-tickets">
+            <form action="" method="GET">
+                {% csrf_token %}
+                <table class="mtable">
+                    <thead>
+                        <tr>
+                            <th>Code reçu</th>
+                            <th>Nom client</th>
+                            <th>Date verif °</th>
+                            <th>Date .pay</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="text" name="code_recu" placeholder="Code reçu"></td>
+                            <td><input type="text" name="nom_client" placeholder="Nom client"></td>
+                            <td><input type="date" name="date_verif"></td>
+                            <td><input type="date" name="date_pay"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="bform">
+                    <button type="submit">Rechercher</button>
+                </div>
+            </form>
+            
+
+            <table class="ticket-table">
+                <thead>
+                    <tr>
+                        <th>N° Ticket</th>
+                        <th>Infos Caissière</th>
+                        <th>Détails Produits</th>
+                        <th>Infos Clients</th>
+                        <th>Montant Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                   {% for paiement in paiements %}
+                        <tr>
+                            <td>
+                                {{paiement.code_verification}}
+                            </td>
+                            <td>
+                                <img src="{% static 'img/oeil.jpg' %}" class="eye-icon" alt="Voir Infos Caissière" 
+                                     onclick="showCaissiereInfo('{{ paiement.verifieur }}', '{{ paiement.date_verif|date}}', '{{ paiement.date_verif|time}}')"/>
+                            </td>
+                            <td>
+                                <img src="{% static 'img/oeil.jpg' %}" class="eye-icon" alt="Voir Produits" 
+                                     onclick="showProductDetails('{{ paiement.id }}')"/>
+                            </td>
+                            <td>
+                                <img src="{% static 'img/oeil.jpg' %}" class="eye-icon" alt="Voir Infos Client" 
+                                     onclick="showClientInfo('{{ paiement.nom_du_client }}', '{{ paiement.phone }}', '{{ paiement.methode_paie }}', '{{paiement.date|date}}', '{{paiement.date|time}}')"/>
+                            </td>
+                            <td>{{paiement.montant_paie}} FCFA</td>
+                        </tr>
+                    {% endfor %} 
+                </tbody>
+            </table>
+        </section>
+    </div>
+    
+    
+    <!-- Popup pour les infos de la caissière -->
+    <div id="caissiereModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('caissiereModal')">&times;</span>
+            <div class="modal-body" id="caissiere-info">
+                <!-- Infos de la caissière seront insérées ici -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Popup pour les infos du client -->
+    <div id="clientModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('clientModal')">&times;</span>
+            <div class="modal-body" id="client-info">
+                <!-- Infos du client seront insérées ici -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Popup pour les détails des produits -->
+    <div id="product-popup" class="modal">
+        <div class="modal-content">
+            <span class="close" id="close-popup">&times;</span>
+            <div class="modal-body1" id="product-list">
+                <!-- Détails des produits seront insérés ici -->
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // Afficher les informations de la caissière dans un popup
+        function showCaissiereInfo(nom, dateVerif, heureVerif) {
+            const caissiereInfo = `
+                <p><strong>Nom :</strong> ${nom}</p>
+                <p><strong>Date de vérif :</strong> ${dateVerif}</p>
+                <p><strong>Heure de vérif :</strong> ${heureVerif}</p>
+            `;
+            document.getElementById("caissiere-info").innerHTML = caissiereInfo;
+            showModal('caissiereModal');
+        }
+        
+        // Afficher les informations du client dans un popup
+        function showClientInfo(nomClient, numeroClient, methodePaiement, date_pay, heure_pay) {
+            const clientInfo = `
+                <p><strong>Nom :</strong> ${nomClient}</p>
+                <p><strong>Numéro :</strong> ${numeroClient}</p>
+                <p><strong>Méthode Paiement :</strong> ${methodePaiement}</p>
+                <p><strong>Date Paiement :</strong> ${date_pay}</p>
+                <p><strong>Heure Paiement :</strong> ${heure_pay}</p>
+
+            `;
+            document.getElementById("client-info").innerHTML = clientInfo;
+            showModal('clientModal');
+        }
+    
+        // Afficher la modale des produits
+        function showProductDetails(paiementId) {
+            const url = "{% url 'caiss_get_products' 0 %}".replace('0', paiementId);
+
+            fetch(url)  // Appelle la nouvelle vue pour récupérer les produits
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.error(data.error); 
+                        return;
+                    }
+                    
+                    let productList = `
+                        <table class="ticket-table"> 
+                            <thead>
+                                <tr>
+                                    <th>Nom du Produit</th>
+                                    <th>Quantité</th>
+                                    <th>Unité</th>
+                                    <th>Total</th>
+                                    <th>Date de Péremption</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+                    data.products.forEach(product => {
+                        // Formatage de la date
+                        const dateExpiration = new Date(product.date_peremption).toLocaleDateString('fr-FR');
+
+                        productList += `
+                            <tr>
+                                <td>${product.nom}</td>
+                                <td>${product.quantite}x</td>
+                                <td>${product.unite}</td>
+                                <td>${product.total}</td>
+                                <td>${dateExpiration}</td>
+                            </tr>
+                        `;
+                    });
+                    productList += `</tbody></table>`;
+                    document.getElementById("product-list").innerHTML = productList; // Utilise la variable productList ici
+                    showModal('product-popup');
+                })
+                .catch(error => console.error('Erreur:', error));
+        }
+
+        // Fonction pour afficher le modale
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = "block";
+        }
+    
+        // Fermer les modales
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+    
+        // Ferme les modales lorsque l'utilisateur clique en dehors du contenu
+        window.onclick = function(event) {
+            if (event.target.matches('.modal')) {
+                closeModal(event.target.id);
+            }
+        };
+
+        let subMenu = document.getElementById("subMenu");
+
+        function toggleMenu() {
+            subMenu.classList.toggle("open-menu");
+        }
+
+        // Fermer le sous-menu quand on clique en dehors
+        window.onclick = function(event) {
+            // Vérifie si le clic est à l'extérieur du subMenu et de l'image de profil
+            if (!subMenu.contains(event.target) && !event.target.closest('.user-pic')) {
+                subMenu.classList.remove("open-menu");
+            }
+        }
+    </script>
+    
+</body>
+</html> 

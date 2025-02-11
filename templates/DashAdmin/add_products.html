@@ -1,0 +1,114 @@
+{% extends '../body_dash/body_dash.html' %}
+{% load static %}
+
+    {% block css_head %}
+        <link rel="stylesheet" href="{% static 'css/settings2.css' %}">
+
+        <style>
+            .alert {
+                padding: 20px;
+                margin-bottom: 20px;
+                border-radius: 5px;
+                position: relative;
+            }
+
+            .alert-success {
+                background-color: #d4edda;
+                color: #155724;
+                border: 1px solid #c3e6cb;
+            }
+        
+            .alert-error {
+                background-color: #f8d7da;  /* Rouge clair */
+                color: #721c24;  /* Texte rouge foncé */
+                border: 1px solid #f5c6cb;  /* Bordure rouge */
+            }
+
+            .alert-warning {
+                background-color: #f8d7da;  /* Rouge clair */
+                color: orangered;  /* Texte rouge foncé */
+                border: 1px solid #f5c6cb;  /* Bordure rouge */
+                border-radius: 5px;
+            }
+        </style>
+    {% endblock %}
+
+    {% block content %}
+                <!-- ====== main section start ======= -->
+                <main>
+                    <div class="separator">
+                        <div class="info">
+                            <h3>Importer Fiche Fournisseur</h3>
+                        </div>
+                    </div>
+        
+                    <div class="analytics">
+        
+                        <div class="files">
+                            <h1>Importation de Fichiers CSV</h1>
+                            
+                            <!-- Formulaire pour l'importation -->
+                            <section class="import-section">
+                                {% if messages %}
+                                    {% for message in messages %}
+                                        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" style="font-size: 15px; font-weight: bold;">
+                                            {{ message }}
+                                            <span class="close" onclick="this.parentElement.style.display='none';">&times;</span>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                                <form action="" method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <label for="products-csv" class="file-label">
+                                        <input type="file" id="products-csv" name="products-csv" accept=".csv" onchange="displayFileName()">
+                                        <span>Fichier Produits</span>
+                                    </label>
+
+                                    <!-- Conteneur pour afficher l'icône et le nom du fichier -->
+                                    <div id="file-info" style="display: none; margin-top: 10px;">
+                                        <img src="{% static 'img/file.jpg' %}" alt="File Icon" style="width: 20px; margin-right: 10px;">
+                                        <span id="file-name"></span>
+                                    </div>
+
+                                    <!-- <span id="file-name" style="margin-top: 10px; display: none;"></span> -->
+
+                                    <div class="two_btn">
+                                        <button type="submit" class="import-button">Importer Fichier</button>
+                                        <a href="{% url 'product' %}" class="import-button2">Ajout Manuel</a>
+                                        <button type="button" style="background-color:#721c24; width: 90px;" onclick="resetFileInput()">Supprimer</button>
+                                    </div>
+                                </form>
+                            </section>
+                        </div>                        
+                    </div>            
+                </main>
+                <!-- ====== main section start ======= -->
+
+                <script>
+                function displayFileName() {
+                        const input = document.getElementById('products-csv');
+                        const file = input.files[0];
+                        const fileNameDisplay = document.getElementById('file-name');
+                        const fileInfo = document.getElementById('file-info');
+
+                        if (file) {
+                            fileNameDisplay.textContent = file.name;
+                            fileInfo.style.display = 'flex'; // Afficher le conteneur et l'icône de fichier
+                        } else {
+                            fileInfo.style.display = 'none'; // Masquer si aucun fichier
+                        }
+                    }
+
+                function resetFileInput() {
+                    const input = document.getElementById('products-csv');
+                    input.value = ''; // Réinitialiser le champ de fichier
+                
+                    // Masquer le conteneur du fichier et réinitialiser le nom du fichier
+                    const fileInfo = document.getElementById('file-info');
+                    const fileName = document.getElementById('file-name');
+                        
+                    fileName.textContent = '';
+                    fileInfo.style.display = 'none';
+                }
+                </script>
+        {% endblock %}

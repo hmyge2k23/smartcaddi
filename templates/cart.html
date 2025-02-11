@@ -1,0 +1,569 @@
+{% extends 'body/body.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block headAPI %}
+	<script src="https://cdn.kkiapay.me/k.js"></script>
+{% endblock %}
+
+{% block content %}
+
+	<!-- PreLoader-->
+    <div class="loader">
+        <div class="loader-inner">
+            <div class="circle"></div>
+        </div> 
+    </div>
+    <!--PreLoader Ends-->
+	
+	<!-- header -->
+	<div class="top-header-area" id="sticker" style="background-color:#07212e;">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12 col-sm-12 text-center">
+					<div class="main-menu-wrap">
+						<!-- logo -->
+						<div class="site-logo">
+							<a href="{% url 'acceuil' %}">
+								<img src="{% static 'img/logo2.png' %}" alt="" style="width: 80px;"> 
+							</a>
+						</div>
+						<!-- logo -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end header -->
+
+	
+	<!-- search area -->
+	<div class="search-area">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-12">
+					<span class="close-btn"><i class="fas fa-window-close"></i></span>
+					<div class="search-bar">
+						<div class="search-bar-tablecell">
+							<h3>Search For:</h3>
+							<input type="text" placeholder="Keywords">
+							<button type="submit">Search <i class="fas fa-search"></i></button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end search arewa -->
+
+	<style>
+		thead .lm th{
+			font-weight:501;
+		}
+
+		.notification {
+			background-color: #bf2318; /* Rouge */
+			color: white;
+			padding: 10px;
+			margin-bottom: 10px;
+			border-radius: 5px;
+			opacity: 0.9;
+			transition: opacity 0.2s ease-out;
+			font-weight: bold;
+		}
+	</style>
+
+
+	<div id="notificationContainer" style="display: none; position: fixed; top: 20px; right: 20px; z-index: 1000;">
+		<!-- Les notifications seront ajoutées ici -->
+	</div>
+
+	<!-- cart -->
+	<div class="cart-section mt-150 mb-150">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-8 col-md-12">
+					<div class="cart-table-wrap">
+						<table class="cart-table">
+							<thead class="cart-table-head">
+								<tr class="table-head-row lm">
+									<th>Nom</th>
+									<th class="">Prix Unitaire</th>
+									<th>Quantité</th>
+									<th class="">Prix Total</th>
+									<th>Date fab</th>
+									<th>Date exp</th>
+									<th class="">Suppr</th>
+								</tr>
+							</thead>
+
+						
+								<tbody>
+									{% for commande in commandes %}
+										<tr class="table-body-row" data-commande-id="{{ commande.id }}" data-stock="{{ commande.produit.quantite }}"> 
+											<td class="product-name">{{ commande.produit.nom_prod }}</td>
+											
+											<td class="product-price">{{ commande.prix_unitaire }} F</td>
+											<td class="product-quantity">
+												<button class="btn btn-sm btn decrease" style="background-color:darkred;color:white;">-</button>
+												<span class="quantity-display">{{ commande.quantite }}</span>
+												<button class="btn btn-sm btn-success increase">+</button>
+											</td>
+											<td class="product-total">
+												<span class="total-price">{{ commande.prix_unitaire|mul:commande.quantite }} F</span>
+											</td>
+											<td>{{ commande.produit.date_fabrication|format_date }}</td>
+											<td>{{ commande.produit.date_peremption|format_date }}</td>
+											<td>
+												<a href="{% url 'del_commande' commande.id %}" style=" font-size:30px; color:darkred; cursor:pointer;" class="material-symbols-outlined">
+													delete_forever 
+												</a>
+											</td>
+										</tr> 
+									{% endfor %}
+								</tbody>
+							
+							{% if request.user.is_authenticated and not commandes and user_group %}
+								<tbody class="empty-table-body" style="background-color: #f2f2f2; text-align: center;">
+									<tr>
+										<td colspan="8" style="font-weight: bold; color:red;">VEUILLEZ SCANNER LE(S) PRODUIT(S) AVANT DE PAYER !</td>
+									</tr>
+								</tbody>
+							{% endif %}
+					
+
+							{% if request.user.is_authenticated and not user_group or not request.user.is_authenticated %}
+							<tbody class="empty-table-body" style="background-color: #f2f2f2; text-align: center;">
+								<tr>
+									<td colspan="8" style="font-weight: bold; color:red;">VEUILLEZ CONNECTEZ LA TABLETTE AVANT DE SCANNER !</td>
+								</tr>
+							</tbody>
+							{% endif %} 										
+						</table>
+
+						<div class="row justify-content-center mt-4">
+
+							{% if request.user.is_authenticated and user_group %}
+							<!-- Bouton pour scanner un produit à ajouter -->
+							<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#qrCodeAddModal"
+								style="text-decoration: none;
+								border: none;
+								border-radius: 20px;
+								width: 200px;
+								font-family: 'Poppins', sans-serif;
+								display: inline-block;
+								background-color: #F28123;
+								color: #fff;
+								padding: 10px;
+								font-weight:600;
+								">
+								Scanner votre produit
+							</button>
+							{% endif %}    
+							
+
+
+							<!-- Modal pour le scan d'ajout de produit -->
+							<div class="modal fade" id="qrCodeAddModal" tabindex="-1" role="dialog" aria-labelledby="qrCodeAddModalLabel" aria-hidden="true">
+								<div class="modal-dialog" role="document">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title" id="qrCodeAddModalLabel">Scan QR Code</h5>
+											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+										</div>
+										<div class="modal-body">
+											<div id="reader-add" style="width: 100%; height: 325px;"></div>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-lg-4">
+					<div class="total-section">
+						<table class="total-table">
+							<thead class="total-table-head">
+								<tr class="table-total-row">
+									<th style="font-weight:501;">Total :</th>
+									<th class="somme_prix"></th>
+								</tr>
+							</thead>
+						</table>
+						
+						<div class="form-button" style="display: flex; justify-content: space-between;">
+							<form action="{% url 'send_total' %}" method="POST">
+								{% csrf_token %}
+								<input type="hidden" name="to" id="totalAmountInput">
+								<div class="cart-buttons">
+									<button type="submit" id="confirmPayment" style="border-radius: 20px; background-color:#F28123; color:white; border: none; padding: 10px; font-family: 'Poppins', sans-serif; font-weight:600;">
+										Confirmer   
+									</button>
+								</div>	
+							</form>
+
+							{% if request.user.is_authenticated and commandes and user_group %}
+								<form method="POST" action="{% url 'del_cart' %}">
+									{% csrf_token %}
+									<div id="boutton1" class="cart-buttons">
+										<button style="border-radius: 20px; background-color:#F28123; color:white; border: none; padding: 10px; font-family: 'Poppins', sans-serif; font-weight:600;">
+											Vider le panier  
+										</button>
+									</div>
+								</form>
+							{% endif %}
+						</div>
+
+
+
+						<!-- Modal pour le message de chargement -->
+						<!-- <div class="modal fade" id="loadingModal" tabindex="-1" role="dialog" aria-labelledby="loadingModalLabel" aria-hidden="true">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+									<div class="modal-body">
+										<p style="font-size: 15px;">Quantité maximum atteinte pour ce produit.</p>
+										<div style="color: rgb(124, 32, 32);" class="spinner-border" role="status">
+											<span class="sr-only">Loading...</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div> -->
+
+					</div>
+				</div>
+			</div>    
+		</div>
+	</div>
+	<!-- end cart -->
+	
+
+
+	<!-- CSS -->
+	<style>
+		/* Container global pour s'assurer que le footer reste en bas */
+		html, body {
+			height: 100%;
+			margin: 0;
+			padding: 0;
+			display: flex;
+			flex-direction: column;
+		}
+		
+		/* Contenu principal doit occuper tout l'espace disponible */
+		.container {
+			flex: 1;
+		}
+		
+		/* Style pour le footer */
+		.copyright p {
+			margin: 0;
+			padding: 16px 0;
+			font-size: 15px;
+		}
+		
+		.copyright a {
+			color: #F28123;
+			font-weight: 700;
+		}
+		
+		.copyright a:hover {
+			color: #f59d53;
+		}
+		
+		.social-icons ul {
+			margin: 0;
+			padding: 0;
+			list-style: none;
+			text-align: right; /* Aligne les icônes à droite */
+		}
+		
+		.social-icons ul li {
+			display: inline-block;
+		}
+		
+		.social-icons ul li a {
+			font-size: 16px;
+			color: #fff;
+			opacity: 0.7;
+			padding: 16px 10px;
+			display: block;
+		}
+		
+		/* Fixer le footer en bas */
+		.copyright {
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			z-index: 1000 /* Assure que le footer reste au-dessus du contenu */
+		  }	
+
+
+/* @media only screen and (min-width: 1200px) and (max-width: 1920px) {
+	
+  #boutton1{
+	margin-right: 61px;
+  }
+  } */
+  
+	@media only screen and (min-width: 778px) and (max-width: 990px) {
+  
+	.total-section table.total-table {
+		margin-top: 20px;
+	}
+	.cart-buttons {
+		display: flex;
+		justify-content: space-between;
+	}
+	}
+
+@media only screen and (min-width: 475px) and (max-width: 777px) {
+  
+  .total-section table.total-table {
+    margin-top: 20px;
+  }
+  .cart-buttons {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+@media only screen and (min-width: 330px) and (max-width: 474px) {
+	
+  .total-section table.total-table {
+    margin-top: 20px;
+  }
+  .cart-buttons {
+    display: flex;
+    justify-content: space-between
+  }
+
+}
+	</style>
+	
+	
+	
+	<!-- copyright -->
+	<div class="copyright">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-6 col-md-12">
+					<p>Copyrights &copy; 2024 , Tous droits réservés.<br>
+					</p>
+				</div>
+				<div class="col-lg-6 text-right col-md-12">
+					<div class="social-icons">
+						<ul>
+							<li><a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a></li>
+							<li><a href="#" target="_blank"><i class="fab fa-linkedin"></i></a></li>						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- end copyright -->
+
+
+	<!-- Js -->		
+	<script>
+		$(document).ready(function() {
+			let html5QrCode = null; 
+			let qrCodeTimer = null;
+	
+			// Gestion des Prix en fonction de la quantité
+			function updateTotalPrice() {
+				var totalPrice = 0;
+				$('.table-body-row').each(function() {
+					var priceString = $(this).find('.total-price').text().trim();
+					var price = parseFloat(priceString.replace('F', '').replace(',', '.'));
+					totalPrice += price;
+				});
+				$('.somme_prix').text(totalPrice.toFixed(2) + ' F');
+				$('#totalAmountInput').val(totalPrice.toFixed(2));
+
+			}
+			// Initialiser la somme des prix au chargement de la page
+			updateTotalPrice();
+		
+		
+			// Vérification avant la confirmation du paiement
+			$('#confirmPayment').click(function(e) {
+				e.preventDefault(); // Empêche le formulaire de se soumettre immédiatement
+
+				var totalAmount = $('#totalAmountInput').val();
+				
+				if (totalAmount > 0) {
+					// Afficher le widget de paiement Kkiapay
+					openKkiapayWidget({
+						amount: totalAmount,
+						key: "ff8048f0421b2a9d253146de1fec0432725d213a", //     7d11cf20652111efbf02478c5adba4b8
+						position: "right",
+						phone: '61000000',
+						// paymentmethod: 'momo',
+						theme: '#07212e',
+						email: 'jean.mangoua225@gmail.com',
+						sandbox: false, // Passe à false en production                  
+						//'https://smartcaddie.localto.net/commander/ApiPay/callback'
+						callback: 'http://127.0.0.1:8000/commander/ApiPay/callback'
+					});
+				} else {
+					location.reload();
+				}
+			});
+
+
+			$('.increase').click(function(){
+				var row = $(this).closest('.table-body-row');
+				var quantityDisplay = row.find('.quantity-display');
+				var quantity = parseInt(quantityDisplay.text());
+				// Stock Maxi du produit
+				var maxQuantity = parseInt(row.data('stock'));
+				var commandeId = row.data('commande-id');
+				
+				// Vérifie que la quantité ne dépasse pas le stock maximum
+				if (quantity < maxQuantity){
+					updateQuantity(commandeId, quantity + 1);
+				}else{
+					showNotification("⚠️ Y a plus de stock ooh!");
+				}
+			});
+			
+			$('.decrease').click(function(){
+				var row = $(this).closest('.table-body-row');
+				var quantityDisplay = row.find('.quantity-display');
+				var quantity = parseInt(quantityDisplay.text());
+				var commandeId = row.data('commande-id');
+				
+				if (quantity > 1) { // Empêche la quantité d'être inférieure à 1
+					// Envoyer la mise à jour au backend via AJAX
+					updateQuantity(commandeId, quantity - 1);
+				}
+			});
+			
+
+			function updateQuantity(commandeId, quantity) {
+				$.ajax({
+					url: '{% url "update_commande_quantity" %}',
+					method: 'POST',
+					data: {
+						'commande_id': commandeId,
+						'quantity': quantity,
+						'csrfmiddlewaretoken': '{{ csrf_token }}'
+					},
+					success: function(response) {
+						// Mettre à jour la quantité affichée
+						var row = $('.table-body-row[data-commande-id="' + commandeId + '"]');
+						row.find('.quantity-display').text(quantity);
+						
+						// Mettre à jour le prix total affiché
+						var totalPriceElement = row.find('.total-price');
+						totalPriceElement.text(response.total_price.toFixed(2) + ' F');
+					
+						// Mettre à jour la somme des prix totaux
+						updateTotalPrice();
+						
+						console.log('Quantité mise à jour avec succès.');
+					},
+					error: function(error) {
+						console.log('Erreur lors de la mise à jour de la quantité:', error);
+					}
+				});
+			}
+			
+			
+			// Scanner de code QR
+			$('#qrCodeAddModal').on('shown.bs.modal', function (e) {
+				html5QrCode = new Html5Qrcode("reader-add");
+				html5QrCode.start({ facingMode: "environment" }, {
+					fps: 10,
+					qrbox: {
+						width: 250,
+						height: 250,
+					}
+				}, function(decodedText, decodedResult) {
+					console.log("QR Code scanned successfully:", decodedText);
+
+					// Envoyer decodedText à l'URL spécifiée
+					$.ajax({
+							url: "{% url 'ajout_panier' %}", // Utilisation de l'URL Django
+							type: 'POST',
+							data: {
+								'decodedText': decodedText,  // Inclure decodedText dans les données
+								csrfmiddlewaretoken: csrftoken  // Ajouter le jeton CSRF
+							},    
+							dataType: 'json',
+							success: function(response) {
+								window.location.href = "{% url 'commander' %}";
+							},
+							error: function(xhr, status, error) {
+							    // Si le backend retourne un message d'erreur, l'extraire pour l'afficher
+								let response = JSON.parse(xhr.responseText);
+						
+								// Afficher le message d'erreur personnalisé s'il existe, sinon un message par défaut
+								if (response.message) {
+										showNotification(response.message);
+								} else {
+									showNotification("Erreur lors de l'ajout au panier");
+								}
+								// Gérer les erreurs de requête AJAX ici
+								// console.error(error);
+							}
+						}); 
+
+						// Gérez le texte décodé ici
+						clearInterval(qrCodeTimer); // Arrête le timer
+						html5QrCode.stop();
+						html5QrCode = null;
+						$('#qrCodeAddModal').modal('hide');
+					});
+		
+					// Configurer un timer pour vérifier si aucun lien n'est récupéré dans un délai donné
+					qrCodeTimer = setTimeout(function() {
+						// Si aucun lien n'est récupéré, afficher un message
+						let messageElement = document.createElement('div');
+						messageElement.classList.add('alert', 'alert-warning', 'mt-3');
+						messageElement.textContent = "Veuillez scanner un produit.";
+						document.getElementById('qrCodeAddModal').appendChild(messageElement);
+					}, 10000); // 10000 millisecondes = 10 secondes
+				});
+		
+				
+				$('#qrCodeAddModal').on('hidden.bs.modal', function (e) {
+					if (html5QrCode) {
+						html5QrCode.stop(); // Arrêtez le scanner lorsque le modal est fermé
+						html5QrCode = null; // Réinitialisez la variable html5QrCode
+						clearInterval(qrCodeTimer); // Arrête le timer si le modal est fermé avant que le lien soit récupéré
+					}
+				});
+			});
+
+
+			function showNotification(message) {
+				var notificationContainer = $('#notificationContainer');
+				
+				// Crée une nouvelle notification
+				var notification = $('<div class="notification">' + message + '</div>');
+				
+				// Ajoute la notification au conteneur
+				notificationContainer.append(notification);
+				
+				// Affiche le conteneur si ce n'est pas déjà visible
+				notificationContainer.show();
+				
+				// Masque la notification après 2 secondes
+				setTimeout(function() {
+					notification.fadeOut(500, function() {
+						$(this).remove(); // Retire la notification après la disparition
+					});
+				}, 1500);
+			}
+			
+	</script>
+
+{% endblock %} 

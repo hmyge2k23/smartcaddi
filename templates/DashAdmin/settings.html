@@ -1,0 +1,173 @@
+{% extends '../body_dash/body_dash.html' %}
+{% load static %}
+
+    {% block css_head %}
+        <link rel="stylesheet" href="{% static 'css/settings2.css' %}">
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.10.4/gsap.min.js"></script>
+
+        <style>
+            .alert {
+                padding: 20px;
+                margin-bottom: 20px;
+                border-radius: 5px;
+                position: relative;
+            }
+
+            .alert-success {
+                background-color: #d4edda;
+                color: #155724;
+                border: 1px solid #c3e6cb;
+            }
+        
+            .alert-error {
+                background-color: #f8d7da;  /* Rouge clair */
+                color: #721c24;  /* Texte rouge foncé */
+                border: 1px solid #f5c6cb;  /* Bordure rouge */
+            }
+
+            .alert-info {
+                background-color: #cce5ff;  /* Bleu clair */
+                color: #004085;  /* Texte bleu foncé */
+                border: 1px solid #b8daff;  /* Bordure bleue */
+            }
+
+            .alert-danger {
+                background-color: #f8d7da;
+                color: #721c24;
+                border: 1px solid #f5c6cb;
+            }
+
+            .alert .close {
+                position: absolute;
+                right: 10px;
+                top: 10px;
+                cursor: pointer;
+            }
+
+            .alert-warning {
+                background-color: #f8d7da;  /* Rouge clair */
+                color: orangered;  /* Texte rouge foncé */
+                border: 1px solid #f5c6cb;  /* Bordure rouge */
+                padding: 10px;
+                margin-bottom: 20px;
+                border-radius: 5px;
+                width: 300px;
+            }
+        </style>
+    {% endblock %}
+
+
+    {% block content %}
+        <!-- ====== main section start ======= -->
+        <main>
+            <div class="separator">
+                <div class="info">
+                    <h3>Paramètre</h3>
+                </div>
+            </div>
+
+                <div class="mid">
+                    <div class="main-content">
+                        <nav class="tabs">
+                            <ul>
+                                <li><a href="#" id="personal-info-tab" class="tab-link">Informations Personnelles</a></li>
+                                <li><a href="#" id="security-settings-tab" class="tab-link">Paramètres de Sécurité</a></li>
+                            </ul>
+                        </nav>
+                        <div class="content">
+                            <section id="personal-info" class="tab-content">
+                                <h2>Informations Personnelles </h2>
+
+                                <div class="profile-pic-container">
+                                    <img id="profilePic" src="{{ user.profile.profile_pic.url }}" alt="Photo de Profil" class="profile-pic">
+                                    
+                                <form method="POST" action="" enctype="multipart/form-data" id="profilePicForm">
+                                    {% csrf_token %}
+                                    <input type="file" id="fileInput" name="profile_pic" style="display:none" accept="image/*" onchange="document.getElementById('profilePicForm').submit()">
+                                    <button type="button" class="btn-edit-pic" onclick="document.getElementById('fileInput').click()" style="margin-right: 10px;">Modifier</button>
+                                </form>
+                                    {% if messages %}
+                                        {% for message in messages %}
+                                            {% if 'personal_info' in message.tags %}
+                                            <div class="alert {% if message.tags %}alert-{{ message.level_tag }}{% endif %}">
+                                                {{ message }}
+                                                <span class="close" onclick="this.parentElement.style.display='none';">&times;</span>
+                                            </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+
+                                <form action="" method="POST">
+                                    {% csrf_token %} 
+                                    <div class="form-group">
+                                       
+                                        <label for="pseudo">Pseudo :</label>
+                                        <input type="text" id="pseudo" name="pseudo" value="{{user.username}}" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Nom :</label>
+                                        <input type="text" id="name" name="last_name" value="{{user.last_name}}" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label>Prénom :</label>
+                                        <input type="text" id="name" name="first_name" value="{{user.first_name}}" required>
+                                    </div>
+
+                                    <div class="form-group" style="margin-bottom: 10px;">
+                                        <label for="email">Adresse e-mail :</label>
+                                        <input type="email" id="email" name="email" value="{{user.email}}" required>
+                                    </div>
+
+                                    <button type="submit">Enregistrer les modifications</button>
+                                </form>
+                            </section>
+                        
+                        
+                            <section id="security-settings" class="tab-content">
+                                <h2>Paramètres de Sécurité</h2>
+                                {% if messages %}
+                                    {% for message in messages %}
+                                        {% if 'password_change' in message.tags %}
+                                        <div class="alert {% if message.tags %}alert-{{ message.level_tag }}{% endif %}">
+                                            {{ message }}
+                                            <span class="close" onclick="this.parentElement.style.display='none';">&times;</span>
+                                        </div>
+                                        {%endif%}
+                                    {% endfor %}
+                                {% endif %}
+                                <form action="" method="POST">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label for="password">Ancien mot de passe:</label>
+                                        <input type="password" name="last_password" placeholder="Ancien mot de passe">
+                                    </div>
+            
+                                    <div class="form-group">
+                                        <label for="password">Nouveau mot de passe :</label>
+                                        <input type="password" name="password" placeholder="Nouveau mot de passe">
+                                    </div>
+            
+                                    <div class="form-group" style="margin-bottom: 15px;">
+                                        <label for="confirm-password">Confirmer le nouveau le mot de passe :</label>
+                                        <input type="password" name="confirm-password" placeholder="Confirmer le nouveau mot de passe">
+                                    </div>
+                                    
+                                    <button type="submit">Changer le mot de passe</button>
+                                </form>
+                            </section>
+                        </div>
+                    </div> 
+                </div>
+        </main>
+        <!-- ====== main section start ======= -->
+
+    {% endblock %}
+    
+    
+    {% block js %}
+        <script src="{% static 'js_dash/scripts.js' %}"></script>
+    {% endblock %} 

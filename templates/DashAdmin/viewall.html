@@ -1,0 +1,44 @@
+{% extends '../body_dash/body_dash.html' %}
+{% load static %}
+
+    {% block css_head %}
+        <link rel="stylesheet" href="{% static 'assets_dash/css/view.css' %}">
+    {% endblock %}
+
+    {% block content %}
+
+                <!-- ====== main section start ======= -->
+                <main>
+
+                    <div class="separator">
+                        <div class="info">
+                            <h3>All Categories</h3>
+                        </div>
+                        <div class="search">
+                            <i class='bx bx-search'></i>
+                            <input type="text" placeholder="Search...">
+                        </div>
+                    </div>
+        
+                    <div class="analytics">
+                        {% for data in categories %}
+                        <div class="item">
+                            <div class="progress">
+                                <div class="info">
+                                    <h5>{{ data.categorie.nom }}</h5>
+                                    <p> {{ data.nombre_produits }} Produits</p>
+                                </div>
+                                
+                            </div>
+
+                            <a href="{% url 'detail_cat' data.categorie.id %}">
+                                <img class="hover-zoom" src="{{ data.categorie.images.url }}" alt="" style="width: 100px;">
+                            </a>
+                        </div>
+                        {% endfor %}
+                    </div>
+        
+                </main>
+                <!-- ====== main section start ======= -->
+                 
+    {% endblock %} 

@@ -1,0 +1,276 @@
+:root {
+  --primary-bg: #fff;
+  --secondary-bg: #f9f9f9;
+  --primary-color: #333;
+  --hover-color: #f0f0f0;
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+
+/* Global styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+}
+
+header {
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Container styles */
+.container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px var(--shadow);
+  width: 90%;
+  max-width: 1000px;
+  margin: 20px auto;
+}
+
+h1 {
+  margin-bottom: 20px;
+  color: var(--primary-color);
+}
+
+/* Header styles */
+h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 28px;
+  color: #000;
+  border-bottom: 2px solid #051922;
+  padding-bottom: 15px;
+}
+
+/* Search form styles */
+form {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+input[type="search"] {
+  padding: 12px;
+  border: 1px solid #c1c3c5;
+  border-radius: 8px;
+  margin-right: 12px;
+  width: 70%;
+  max-width: 400px;
+  font-size: 16px;
+}
+
+button {
+  padding: 12px 20px;
+  border: none;
+  background-color: #F28123;
+  color: #fff;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #da721d;
+}
+
+/* Table styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+thead th,
+tbody td {
+  border: 1px solid #c2c6ca; /* Bordures visibles pour les cellules */
+  padding: 16px 10px;
+  font-size: 16px;
+}
+
+thead th {
+  background-color: #051922;
+  color: #fff;
+  text-align: left;
+  font-weight: 600;
+}
+
+tbody tr {
+  transition: background-color 0.3s ease;
+}
+
+tbody tr:hover {
+  background-color: #f0f0f0; /* Couleur de survol */
+}
+
+tbody td {
+  color: #555;
+}
+
+/* Styles spécifiques pour la ligne "Total" */
+.total-row td {
+  border-left: none; /* Pas de bordure à gauche de la première cellule */
+  color: black;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.total-row .vide {
+  border-bottom: none ;
+  border-right: none ;
+
+}
+
+/* Button section styles */
+.btn {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.btn button {
+  background-color: #F28123;
+  padding: 14px 22px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #fff;
+}
+
+.btn button:hover {
+  background-color: #d67220;
+}
+
+/* Profile section */
+.profile {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative;
+}
+
+.info {
+  margin-right: 10px;
+  text-align: right;
+}
+
+.info p {
+  margin: 0;
+  font-size: 16px;
+}
+
+.info small {
+  color: #aaa;
+  font-size: 12px;
+}
+
+.profile_uuy img {
+  width: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.sub-menu-wrap {
+  position: absolute;
+  top: 80px;
+  right: 0;
+  width: 250px;
+  background-color: #fff;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  overflow: hidden;
+  transform: scale(0);
+  transform-origin: top right;
+  transition: transform 0.3s ease;
+}
+
+/* .sub-menu-wrap img {
+    width: 50px;
+} */
+
+.sub-menu-wrap.open-menu {
+  transform: scale(1);
+}
+
+.sub-menu {
+  padding: 20px;
+}
+
+.user_info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.user_info img {
+  border-radius: 50%;
+  width: 40px;
+  margin-right: 10px;
+}
+
+.user_info h2 {
+  font-size: 18px;
+  margin: 0;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 10px 0;
+}
+
+.sub-menu-link {
+  display: flex;
+  align-items: center;
+  padding: 0px 0;
+  color: #333;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.sub-menu-link img {
+  width: 20px;
+  margin-right: 10px;
+}
+
+.sub-menu-link span {
+  margin-left: auto;
+}
+
+.sub-menu-link:hover {
+  background-color: #f0f0f0;
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+
+  .wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .container {
+    padding: 20px;
+  }
+
+  input[type="search"] {
+    width: 100%;
+  }
+
+  table {
+    font-size: 14px;
+  }
+
+  header {
+    position: static;
+    display: block;
+    margin-top: 20px;
+    width: 100%
+  }
+}

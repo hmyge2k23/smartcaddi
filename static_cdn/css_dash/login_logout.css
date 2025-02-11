@@ -1,0 +1,215 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-image: url('../img/hero-bg.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.login-box {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+}
+
+.logo {
+    background-color: #051922;
+    border-radius: 28px;
+    width: 100px;
+    margin-bottom: 10px;
+}
+
+.login-box h2 {
+    margin-bottom: 20px;
+    font-size: 30px;
+    color: #000000;
+    font-weight: bold;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    text-align: left;
+}
+
+input {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.login-box .btn {
+    background-color: #051922;
+    color: #fff;
+    font-weight: bold;
+    font-size: 17px;
+    border: none;
+    padding: 8px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #F28123;
+}
+
+
+.forgot-password {
+    display: block;
+    margin-top: 15px;
+    color: #00BFFF;
+    text-decoration: none;
+    font-size: 14px;
+    color: #F28123;
+    font-weight: bold;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+    color: #051922;
+}
+
+/* ========= mdp css ============== */
+.reset-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f4f4f4;
+}
+
+.reset-box {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #000000;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    text-align: left;
+}
+
+.reset-box input {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.reset-box .btn {
+    background-color: #051922;
+    color: white;
+    border: none;
+    padding: 10px;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.reset-box.btn:hover {
+    background-color: #F28123;
+}
+
+/* ========= otp css ============== */
+.auth-box {
+    background-color: #fff;
+    padding: 20px 40px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+/* Titre */
+.auth-box h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #000000;
+}
+
+/* Label des champs */
+.auth-box label {
+    display: block;
+    text-align: left;
+    margin-bottom: 8px;
+    color: #555;
+    font-weight: bold;
+}
+
+/* Champs de texte */
+.auth-box input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+/* Bouton de soumission */
+.auth-box .btn {
+    background-color: #051922;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    width: 100%;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.auth-box .btn:hover {
+    background-color: #F28123;
+}
+
+/* Ajout d'un effet d'ombre pour le conteneur */
+.auth-box {
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+}

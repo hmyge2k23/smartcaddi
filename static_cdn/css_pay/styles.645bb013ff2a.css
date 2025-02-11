@@ -1,0 +1,237 @@
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh; 
+    display: flex;
+    justify-content: center; /* Centre horizontalement */
+    align-items: center; 
+}
+
+
+.container {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 400px;
+    width: 100%;
+    padding: 20px;
+}
+
+.modal-content {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.modal-content.visible {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.amount {
+    font-size: 24px;
+    font-weight: bold;
+    color: #FF3333;
+}
+
+.info {
+    font-size: 12px;
+    color: #777;
+    margin-top: 5px;
+}
+
+.info a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.payment-info {
+    margin-bottom: 20px;
+    padding: 10px;
+    width: 380px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-align: center; /* Centre le texte dans la section d'informations */
+}
+
+.payment-info p {
+    margin: 0 0 10px;
+    font-size: 16px;
+    color: #333;
+}
+
+.payment-images {
+    display: flex;
+    justify-content: center; /* Centre les images horizontalement */
+    gap: 10px; /* Espacement entre les images */
+    margin-top: 10px;
+}
+
+
+.payment-image {
+    width: 50px; /* Largeur des images, ajustez selon vos besoins */
+    height: 50px; /* Garde la proportion de l'image */
+    border-radius: 30px; /* Coins arrondis */
+    border: 1px solid #ddd; /* Bordure optionnelle pour les images */
+}
+
+#phone-number {
+    width: 400px;
+}
+
+.selected-image {
+    border: 3px solid #068002; /* Couleur de la bordure pour l'image sélectionnée */
+    box-shadow: 0 0 10px rgba(0, 17, 34, 0.171); /* Ajoute un effet d'ombre */
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"] {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.pay-btn {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    margin-top: 30px; 
+}
+
+.pay-btn:hover {
+    background-color: #0056b3;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 12px;
+    color: #777;
+}
+
+.footer p {
+    margin: 5px 0;
+}
+
+.content-top, .content-bottom {
+    width: 100%;
+    text-align: center;
+    padding: 25px;
+}
+
+.content-top {
+    background-color: #007bff;
+    color: white;
+    border-radius: 20px 20px 0 0;
+}
+
+.content-bottom {
+    /* background-color: white; */
+    color: black;
+    border-radius: 0 0 20px 20px;
+}
+
+.success-icon {
+    font-size: 100px;
+    margin-bottom: 20px;
+}
+
+.red-text {
+    color: red;
+    font-weight: bold;
+}
+
+.hidden {
+    display: none;
+}
+
+.success {
+    background-color: #28a745;
+    width: 380px;
+}
+
+.success p {
+    margin: 20px 0;
+}
+
+.time {
+    background-color: #0025c9;
+    width: 380px;
+}
+
+.content-top.time {
+    position: relative; 
+    padding-bottom: 180px; 
+}
+
+.content-top.time img {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+}
+
+.content-top.time h3+p {
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.red-text {
+    font-size: 20px;
+    background-color: #e0e0e0;
+    border-radius: 15px;
+    padding: 12px;
+}
+
+
+#providerIcon {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    margin-left: 15px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+}
+
+button {
+    padding: 15px;
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 30px;
+    font-size: 18px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}

@@ -1,0 +1,96 @@
+{% extends '../body_dash/body_dash.html' %}
+{% load static %}
+
+    {% block css_head %}
+        <link rel="stylesheet" href="{% static 'css/settings2.css' %}">
+    {% endblock %}
+
+
+    {% block content %}
+        <!-- ====== main section start ======= -->
+        <main>
+
+            <section class="category">
+                <div class="item" style="align-items: center;">
+                    <div class="progress">
+                        <div style="color: white;display: flex; flex-direction: column;" class="info">
+                            <h5 style="font-size: 20px;"> {{categorie.nom}} </h5>
+                            <p>{{ total_produits }} Produits</p>
+                        </div>
+                        <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <a href="#">
+                        <img class="hover-zoom" src="{{ categorie.images.url }}" alt="" style="width: 100px;">
+                    </a>
+                </div>
+                
+                
+                <div class="subcategory">
+                    
+                    <!-- ===== Fruits et legumes ====== -->
+                    <div class="products">
+                    
+                        {% for data in sous_categorie_data %}
+                            <h5>{{ data.sous_categorie.nom }}</h5>
+                            
+                            {% if data.produits %}
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Produit</th>
+                                        <th>Prix</th>
+                                        <th>Stock (Rayon)</th>
+                                    </tr>
+                                </thead>   
+
+                                <tbody>
+                                    {% for produit in data.produits %}
+                                    <tr>
+                                        <td>{{produit.nom_prod}}</td>
+                                        <td>{{produit.prix}} FCFA</td>
+                                        <td>{{produit.quantite}}</td>
+
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                    {% else %}
+                        <div class="products">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="color: red; font-size: 15px; text-align: center;">Aucun produits présents ici</th>
+                                    </tr>
+                                </thead>   
+
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                        <div class="no-products" style="text-align: center;">
+                                            <img src="{% static 'assets_dash/images/forbidden.png' %}" alt="Aucun produit" style="width: 50px;">
+                                        </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endif %}
+
+                    {% endfor %}
+                    </div>
+
+
+                                
+                </div>
+                <!-- Répétez ce modèle pour les autres catégories et sous-catégories -->
+            </section>
+
+            
+        </main>
+        <!-- ====== main section start ======= --> 
+    {% endblock %}
+    
+    {% block js %}
+        <script src="{% static 'js_dash/main.js' %}"></script>
+    {% endblock %} 

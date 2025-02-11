@@ -1,0 +1,174 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supermarché - Validation de Paiement</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f4f4f4;
+    position: relative;
+    overflow: hidden;
+    padding: 10px;
+}
+
+h2 {
+    color: rgb(7, 33, 46);
+    font-size: 36px;
+    margin-bottom: 10px;
+    font-family: 'Algerian', sans-serif;
+    animation: textFadeIn 1.8s ease-in-out;
+    text-shadow: 2px 2px 4px rgba(10, 41, 63, 0.883);
+}
+
+.hidden {
+    display: none;
+}
+
+#verification-section {
+    margin-top: 10px;
+}
+
+.verification-code {
+    font-size: 8vw; /* Utilisation de vw pour une taille de police responsive */
+    color: black;
+    font-weight: bold;
+    background-color: #04b92c;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    margin-top: 10px;
+    animation: fadeIn 2s ease-in-out;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes textFadeIn {
+    0% { opacity: 0; transform: translateY(-20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+#back-icon-container {
+    position: absolute;
+    top: 20px; /* Vous pouvez ajuster cette valeur selon vos besoins */
+    left: 10px; /* Ajustez la position gauche */
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#back-icon {
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    font-size: 40px; /* Augmentez la taille du bouton */
+    color: #003366;
+    padding: 12px; /* Ajustez le padding pour un bouton plus grand */
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    #back-icon-container {
+        left: 5px; /* Ajustez la position gauche pour les écrans plus petits */
+    }
+}
+
+#back-icon-container:hover #back-icon {
+    color: #000;
+    transform: scale(1.1);
+}
+
+.container {
+    text-align: center;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 50px;
+    animation: slideIn 1s ease-out;
+    width: 90%;
+    max-width: 500px;
+}
+
+@keyframes slideIn {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+        padding: 20px;
+    }
+    h2 {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 480px) {
+    h2 {
+        font-size: 24px;
+    }
+    .verification-code {
+        font-size: 12vw;
+        padding: 10px;
+    }
+    #back-icon {
+        font-size: 30px;
+      padding: 8px;
+    }
+}  
+</style>
+
+<body>
+    
+    
+    <div class="container">
+        <div id="verification-section">
+            <h2>Dernier Paiement</h2>
+            {% if history %}
+                <p id="code" class="verification-code">{{ history.code_verification }}</p>
+                <img src="{{ history.qr_image }}" alt="QR Code">
+            {% else %}
+                <p id="code" class="verification-code">
+                    <img src="{% static 'assets_dash/images/forbidden.png' %}" alt="" style="width: 300px; margin: 0 60px;">
+                </p>
+            {% endif %}  
+        </div>
+    </div>
+    <div id="back-icon-container" onclick="page_home()">
+        <i id="back-icon" class='bx bx-arrow-back'></i>
+    </div>
+
+
+    <script>
+        function page_home() {
+            var url = "{% url 'acceuil' %}"; 
+            window.location.href = url;
+        }
+        
+        // Empêcher d'accéder à la Page avec le bouton Retour du Navigateur
+        window.onpageshow = function(event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        };
+    </script>
+</body>
+</html>  

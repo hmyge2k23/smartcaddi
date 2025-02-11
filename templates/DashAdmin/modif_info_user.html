@@ -1,0 +1,63 @@
+{% extends '../body_dash/body_dash.html' %}
+{% load static %}
+
+{% block css_head %}
+    <link rel="stylesheet" href="{% static 'css/settings2.css' %}">
+    
+    <style>
+        .analytics {
+            display: flex;
+            gap: 20px; /* Espace entre les sections */
+        }
+
+        .manage-btn {
+            background-color: #F28123;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+    </style>
+{% endblock %}
+
+{% block content %}
+<main>
+    <div class="analytics">
+        <!-- Tablet Management Section -->
+        <section id="tablet-management">
+            <div class="section-header">
+                <h2>Gestion des Tablettes</h2>
+                <p>Surveillez et gérez les tablettes des clients en temps réel.</p>
+                <button class="manage-btn" onclick="tablette()">Gérer les Tablettes</button>
+            </div>          
+        </section>
+
+        <hr style="border: 1px solid #F28123; border-radius: 20px;">
+
+        <!-- Cashier Account Management Section -->
+        <section id="cashier-management">
+            <div class="section-header">
+                <h2>Gestion des Caissiers</h2>
+                <p>Supervisez les comptes des caissiers et les autorisations d'accès.</p>
+                <button class="manage-btn" onclick="caissiere()">Gérer les Caissiers</button>
+            </div>            
+        </section>   
+    </div>
+</main>
+{% endblock %}
+
+{% block js %}
+    <script>
+        function tablette(){
+            url = "{% url 'update_tab' %}";
+            window.location.href = url;
+        }
+
+        function caissiere(){
+            url = "{% url 'update_caiss' %}";
+            window.location.href = url
+        }
+    </script>
+{% endblock %}

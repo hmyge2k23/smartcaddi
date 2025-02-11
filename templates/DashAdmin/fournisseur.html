@@ -1,0 +1,126 @@
+{% extends '../body_dash/body_dash.html' %}
+{% load static %}
+
+    {% block css_head %}
+        <link rel="stylesheet" href="{% static 'css/settings2.css' %}">
+        
+        <!--Indicatifs Pays-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+
+        <style>
+            .alert {
+                padding: 20px;
+                margin-bottom: 20px;
+                border-radius: 5px;
+                position: relative;
+            }
+
+            .alert-success {
+                background-color: #d4edda;
+                color: #155724;
+                border: 1px solid #c3e6cb;
+            }
+        
+            .alert-error {
+                background-color: #f8d7da;  /* Rouge clair */
+                color: #721c24;  /* Texte rouge foncé */
+                border: 1px solid #f5c6cb;  /* Bordure rouge */
+            }
+
+            .alert-info {
+                background-color: #cce5ff;  /* Bleu clair */
+                color: #004085;  /* Texte bleu foncé */
+                border: 1px solid #b8daff;  /* Bordure bleue */
+            }
+
+            .alert .close {
+                position: absolute;
+                right: 10px;
+                top: 10px;
+                cursor: pointer;
+            }
+
+            .alert-warning {
+                background-color: #f8d7da;  /* Rouge clair */
+                color: orangered;  /* Texte rouge foncé */
+                border: 1px solid #f5c6cb;  /* Bordure rouge */
+                padding: 10px;
+                margin-bottom: 20px;
+                border-radius: 5px;
+                width: 300px;
+            }
+        </style>
+    {% endblock %}
+
+    {% block content %}
+    <main>
+        <div class="separator">
+            <div class="info">
+                <h3>Fournisseur</h3>
+            </div>
+        </div>
+
+        <div class="cont">
+            <h1>Ajouter un Fournisseur</h1>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                        {{ message }}
+                        <span class="close" onclick="this.parentElement.style.display='none';">&times;</span>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form action="" method="POST" class="form-grid" onsubmit="preparePhoneNumber()">
+                {% csrf_token %}
+                <!-- Nom du produit -->
+                <div class="form-group">
+                    <label for="product-name">Nom:</label>
+                    <input type="text" name="name">
+                </div>
+    
+                <!-- Code-barres -->
+                <div class="form-group">
+                    <label for="product-barcode">Prenom:</label>
+                    <input type="text" name="first_name">
+                </div>
+    
+                <!-- Prix du produit -->
+                <div class="form-group">
+                    <label for="product-price">Adresse</label>
+                    <input type="text" name="adress">
+                </div>
+    
+                <div class="form-group">
+                    <label for="phone">Numéro de téléphone</label>
+                    <input type="tel" id="phone" name="phone_display" placeholder="Votre numéro de téléphone">
+                </div>  
+                
+                <!-- Champ caché pour envoyer le numéro complet -->
+                <input type="hidden" id="full_phone_number" name="number_tel">
+
+                <!-- Bouton en pleine largeur -->
+                <div class="form-group full-width">
+                    <button type="submit" style="background-color: #F28123;">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+        
+        </main>
+
+    <script>
+        var input = document.querySelector("#phone");
+        var iti = window.intlTelInput(input, {
+            initialCountry: "ci",  // Définit un pays par défaut (Côte d'Ivoire ici)
+            preferredCountries: ["ci", "fr", "us", "gb", "in"],  // Pays suggérés en haut de la liste
+            utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js"  // Pour la gestion des numéros
+        });
+
+        function preparePhoneNumber() {
+            var fullPhoneNumber = iti.getNumber(); // Récupère le numéro complet avec l'indicatif
+            document.getElementById("full_phone_number").value = fullPhoneNumber; 
+        }
+    </script>
+    
+{% endblock %}

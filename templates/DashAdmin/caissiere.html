@@ -1,0 +1,97 @@
+{% extends '../body_dash/body_dash.html' %}
+{% load static %}
+
+    {% block css_head %}
+        <link rel="stylesheet" href="{% static 'css/settings2.css' %}">
+        <style>
+            .alert {
+                padding: 20px;
+                margin-bottom: 20px;
+                border-radius: 5px;
+                position: relative;
+            }
+        
+            .alert-success {
+                background-color: #d4edda;
+                color: #155724;
+                border: 1px solid #c3e6cb;
+            }
+        
+            .alert-error {
+                background-color: #f8d7da;  /* Rouge clair */
+                color: #721c24;  /* Texte rouge foncé */
+                border: 1px solid #f5c6cb;  /* Bordure rouge */
+            }
+        
+            .alert-warning {
+                background-color: #f8d7da;  /* Rouge clair */
+                color: orangered;  /* Texte rouge foncé */
+                border: 1px solid #f5c6cb;  /* Bordure rouge */
+            }
+        </style>
+    {% endblock %}
+
+    {% block content %}
+    <main>
+        <div class="analytics">
+        <!-- Tablet Management Section -->
+        <section id="tablet-management">
+            <div class="section-header">
+                <h2>Gestion des Caissieres</h2>
+                <p>Modifier les Password des caissières !</p>
+            </div>
+            <div class="content-wrapper">
+                <!-- Tablet Shelves on the Left -->
+                <div class="tablet-grid" style="display: flex;">
+                    {% for user in caissieres_users %}
+                        <div class="tablet-card" id="tablet-001">
+                            <div class="tablet-info">
+                                <h3>Tablette</h3>
+                                <p>ID : {{ user.id }}</p>
+                                <p>Nom : {{ user.username }}</p>
+                                <p>Mot de passe : {{ user.password|slice:":8" }}...{{ user.password|slice:"-4:" }}</p>
+                            </div>
+                            <img src="{% static 'img/tab.png' %}" alt="Icône de la tablette" class="tablet-icon">
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <br><br>
+            <!-- Pagination for Tablets -->
+            <hr style="border: 1px solid #F28123; border-radius: 20px;"> 
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                        {{ message }}
+                        <span class="close" onclick="this.parentElement.style.display='none';">&times;</span>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Form on the Right -->
+            <div class="form-container">
+                <h3>Modifier la Connexion de la Tablette</h3>
+                <br>
+                <form action="{% url 'modifier_caiss' %}" method="POST">
+                    {% csrf_token %}
+                    <label for="tablet-id">ID de la Tablette:</label>
+                    <input type="number" name="caiss_id">
+
+                    <label for="new-password">Nouveau Mot de Passe:</label>
+                    <input type="password" name="new_password">
+
+                    <button type="submit">Soumettre</button>
+                </form>
+            </div>
+            
+        </section>
+
+
+        <hr style="border: 1px solid #F28123; border-radius: 20px;"> 
+        </div>
+    </main>
+    {% endblock %}
+
+    

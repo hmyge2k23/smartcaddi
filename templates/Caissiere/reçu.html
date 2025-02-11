@@ -1,0 +1,140 @@
+{% load static %}
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reçu</title>
+    <link rel="stylesheet" href="{% static 'css/reçu.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+
+    <button class="back-button" onclick="home()">
+        <i class="fas fa-arrow-left"></i>
+    </button>
+
+    <div class="receipt">
+
+        <button class="hidden-print" id="btnPrint" data-paiement-id="{{ paiement.id }}" style="cursor:pointer;">
+            <i>Cliquez Ici !</i>
+        </button>
+
+        <h1 class="store-name">SMART CADDIE</h1>
+        <p class="store-info">YOPOUGON - MAROC <br></p>
+
+        <div class="receipt-info">
+            <p><strong>Ticket n°:</strong> {{paiement.code_verification}} &nbsp;&nbsp;&nbsp; <strong>Caissier:</strong> {{request.user.last_name}} {{request.user.first_name}}&nbsp;&nbsp;&nbsp;</p>
+            <p> </p>
+            <p><strong>Client:</strong> {{paiement.nom_du_client}} &nbsp;&nbsp;&nbsp;</p>
+        </div>
+        <div class="divider">
+            <strong>Date paiement : </strong>{{paiement.date}}
+        </div>
+        <table class="item-table">
+            <tr>
+                <th>Désignation</th>
+                <th>P.U</th>
+                <th>Qte</th>
+                <th>Montant</th>
+            </tr>
+            {% for commande in commandes %}
+                <tr>
+                    <td>{{ commande.produit.nom_prod }}</td>
+                    <td>{{ commande.produit.prix }} FCFA</td>
+                    <td>{{ commande.quantite }}</td>
+                    <td>{{ commande.produit.prix|mul:commande.quantite }} FCFA</td>
+                </tr>
+            {% endfor %}
+        <!-- Répéter les lignes selon le besoin -->
+        </table>    
+        <div class="divider"></div>
+        <div class="price">
+            <div class="total">
+                <p>Total :</p>
+            </div>
+            <div class="payment">
+                <p>{{paiement.montant_paie}} FCFA</p>
+            </div>
+        </div> 
+        <div class="meet">
+            <p class="payment-method">Méthode paiement : <b>{{paiement.methode_paie}}</b></p>
+        </div>
+        
+        <div class="divider"></div>
+        <p class="footer">Les articles vendus ne sont ni repris ni échangés.</p>
+        <p class="thank-you">Merci à bientôt !</p>
+        <div class="foot_end">
+            <p class="timestamp">Copyright ©2024 Tout droits réservé</p>
+        </div>
+    </div>
+
+    <!-- Boîte de dialogue de confirmation -->
+    <div id="confirmationDialog" class="hidden" style="display: none;">
+        <div class="dialog-content">
+            <p style="font-style: oblique;">Voulez-vous imprimer le reçu ?</p>
+            <div class="dialog-buttons">
+                <button class="dialog-btn green-btn" id="confirmPrint">Oui</button>
+                <button id="cancelPrint" class="dialog-btn red-btn">Non</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        var btnPrint = document.querySelector('#btnPrint');
+        var updateUrl = "{% url 'update_verif' 0 %}";
+        
+        btnPrint.addEventListener("click", () => {
+            // Afficher la boîte de dialogue de confirmation
+            var confirmationDialog = document.getElementById('confirmationDialog');
+            confirmationDialog.style.display = 'block';
+    
+            
+            // Gérer le clic sur le bouton "Oui"
+            document.getElementById('confirmPrint').onclick = function() {
+                var paiementId = btnPrint.getAttribute('data-paiement-id');  // Récupérer l'ID du paiement
+    
+                // Construire l'URL en remplaçant 0 par l'ID
+                var url = updateUrl.replace('0', paiementId);
+
+                // Appel AJAX pour mettre à jour le paiement
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json'
+                    }
+                }).then(response => response.json())
+                  .then(data => {
+                      if (data.status === 'success') {
+                          // Si la mise à jour a réussi, imprimer
+                          window.print();
+                      } else {
+                          alert(data.message || 'Erreur lors de la mise à jour.');
+                      }
+                  });
+    
+                // Fermer le modal après avoir confirmé
+                confirmationDialog.style.display = 'none';
+            };
+        });
+    
+        function hideConfirmation() {
+            var confirmationDialog = document.getElementById('confirmationDialog');
+            confirmationDialog.style.display = 'none';
+        }
+
+        // Gérer le clic sur le bouton "Non"
+        document.getElementById('cancelPrint').onclick = hideConfirmation;
+
+
+        function home(){
+            url = "{% url 'caiss_home' %}";
+            window.location.href = url;
+        }
+    </script>    
+    
+</body>
+</html> 

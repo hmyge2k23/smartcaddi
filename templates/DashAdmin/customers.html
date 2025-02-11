@@ -1,0 +1,252 @@
+{% extends '../body_dash/body_dash.html' %}
+{% load static %}
+
+    {% block css_head %}
+        <link rel="stylesheet" href="{% static 'assets_dash/css/customers.css' %}">
+        <style>
+            .fa-solid{
+                font-size: 30px;
+            }
+          </style>
+    {% endblock %}
+
+    {% block content %}
+                <!-- ====== main section start ======= -->
+                    <main>
+                        <div class="history">
+                            <a href="{% url 'customers' %}">
+                                <img src="{% static 'img/relaod.png' %}" style="width: 40px;" alt="">
+                            </a>
+                            <h1>Historique des Tickets</h1>
+                            <section aria-labelledby="historique-des-tickets">
+                                <form action="" method="GET">
+                                    <table class="mtable">
+                                        <thead>
+                                            <tr>
+                                                <th>Code reçu</th>
+                                                <th>Nom client</th>
+                                                <th>Nom caissière</th>
+                                                <th>Prix</th>
+                                                <th>Date (verif)</th>
+                                                <th>Date (pay)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><input type="text" name="code_recu" placeholder="Code reçu"></td>
+                                                <td><input type="text" name="nom_client" placeholder="Nom client"></td>
+                                                <td><input type="text" name="nom_caissiere" placeholder="Nom caissière"></td>
+                                                <td><input type="number" name="prix" placeholder="Prix"></td>
+                                                <td><input type="date" name="date_verif"></td>
+                                                <td><input type="date" name="date_pay"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class="bform">
+                                        <button type="submit">Rechercher</button>
+                                    </div>
+                                </form>
+                    
+                                <table class="ticket-table">
+                                    <thead>
+                                        <tr>
+                                            <th>N° Ticket</th>
+                                            <th>Infos Caissière</th>
+                                            <th>Détails Produits</th>
+                                            <th>Infos Client</th>
+                                            <th>Montant Total</th>
+                                            <th>Statut Paye</th>
+                                            <th>Statut Verification</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!--  -->
+                                        {% if tickets is not None %}
+                                            {% for ticket in tickets %}
+                                                <tr>
+                                                    <td>
+                                                        <b>{{ ticket.ticket_code }}</b>
+                                                    </td>
+                                                    <td>
+                                                        <img src="{% static 'img/oeil.jpg' %}" class="eye-icon" alt="Voir Infos Caissière" 
+                                                            onclick="showCaissiereInfo('{{ ticket.nom_caissiere }}', '{{ ticket.date_verif }}')"/>
+                                                    </td>
+                                                    <td>
+                                                        <img src="{% static 'img/oeil.jpg' %}" class="eye-icon" alt="Voir Produits" 
+                                                            onclick="showProductDetails('{{ ticket.produit_details|escapejs }}')"/>
+                                                    </td>
+                                                    <td>
+                                                        <img src="{% static 'img/oeil.jpg' %}" class="eye-icon" alt="Voir Infos Client" 
+                                                            onclick="showClientInfo('{{ ticket.nom_client }}', '{{ ticket.phone_client }}', '{{ ticket.methode_paiement }}', '{{ ticket.tablette }}')"/>
+                                                    </td>
+                                                    <td>{{ ticket.total_montant }} FCFA</td>
+                                                    <td>
+                                                        {% if ticket.statut_paiement == "Payé" %}
+                                                            <span><img src="{% static 'img/success.png' %}" alt="" style="width: 30px;"></span>
+                                                        {% else %}
+                                                            <span>Non payé</span>
+                                                        {% endif %} 
+                                                    </td>
+                                                    <td>
+                                                        {% if ticket.statut_verification == "Vérifié" %}
+                                                            <img src="{% static 'img/success.png' %}" alt="Vérifié" style="width: 30px;">
+                                                        {% else %}
+                                                            <span><i class="fa-solid fa-spinner fa-spin-pulse"></i></span>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+
+                                        {% else %}
+                                            <tr style="background-color: rgb(102, 32, 32);">
+                                                <td colspan="7" type="hidden;" style="color: white;">
+                                                    <b style="font-size: 25px;">Aucun Paiement</b>
+                                                </td>
+                                            </tr>                                           
+                                        {% endif %}
+                                    </tbody>
+                                </table>
+                            </section>
+                        </div>           
+
+
+                    <!-- Popup pour les infos de la caissière -->
+            <div id="caissiereModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal('caissiereModal')">&times;</span>
+                    <div class="modal-header">Infos Caissière</div>
+                    <div class="modal-body">
+                        <p><strong>Nom :</strong> <i id="caissiereName"></i></p>
+                        <p><strong>Date Vérification :</strong> <i id="caissiereDate"></i></p>
+                        <p><strong>Heure Vérification :</strong> <i id="caissiereHeure"></i></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popup pour les infos du client -->
+            <div id="clientModal" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeModal('clientModal')">&times;</span>
+                    <div class="modal-header">Infos Client</div>
+                    <div class="modal-body">
+                        <p><strong>Nom :</strong> <i id="clientNom"></i></p>
+                        <p><strong>Numéro :</strong> <i id="clientPhone"></i></p>
+                        <p><strong>Méthode de Paiement :</strong> <i id="clientMethode"></i></p>
+                        <p><strong>Tablette Utilisé :</strong> <i id="tabClient"></i></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Popup pour les détails des produits -->
+            <div id="product-popup" class="modal">
+                <div class="modal-content">
+                    <span class="close" id="close-popup">&times;</span>
+                    <div class="modal-header">Produits du panier</div>
+                    <div class="modal-body1">
+                        <div class="product-table-container">
+                            <table class="product-table">
+                                <thead>
+                                    <tr>
+                                        <th>Produit</th>
+                                        <th>Quantité</th>
+                                        <th>Unité</th>
+                                        <th>Total</th>
+                                        <th>Date d'expiration</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="product-list">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+            
+                <!-- ====== main section start ======= -->
+    {% endblock %}
+
+    {% block js %}
+        <script>
+            // Afficher les informations de la caissière dans un popup
+            function showCaissiereInfo(nomCaissiere, datePaiement) {
+                // Convertir la chaîne en objet Date
+                let dateObj = new Date(datePaiement);
+
+                // Extraire la date sans l'heure
+                let dateSansHeure = dateObj.toLocaleDateString('fr-FR');
+                // Extraire l'heure et les minutes
+                let heure = dateObj.getHours().toString().padStart(2, '0'); // "02"
+                let minutes = dateObj.getMinutes().toString().padStart(2, '0'); // "27"
+                // Combiner l'heure et les minutes
+                let heureComplete = `${heure}:${minutes}`;
+
+                document.getElementById("caissiereModal").style.display = "block";
+                document.getElementById("caissiereName").innerText = nomCaissiere;
+                document.getElementById("caissiereDate").innerText = dateSansHeure;
+                document.getElementById("caissiereHeure").innerText = heureComplete;
+            }
+
+            // Afficher les informations du client dans un popup
+            function showClientInfo(nomClient, phoneClient, methodePaiement, tablette) {
+
+                // Mettre à jour le contenu de la popup avec les informations du client
+                document.getElementById('clientNom').innerText = nomClient;
+                document.getElementById('clientPhone').innerText = phoneClient;
+                document.getElementById('clientMethode').innerText = methodePaiement;
+                document.getElementById('tabClient').innerText = tablette;
+        
+                // Afficher le Popup
+                document.getElementById("clientModal").style.display = "block";
+            }
+
+            // Afficher la modale des produits
+            function showProductDetails(produitDetails) {
+                // Parse la chaîne JSON en tableau d'objets JavaScript
+                produitDetails = JSON.parse(produitDetails);
+                    
+                document.getElementById("product-popup").style.display = "block";
+
+                // Vider la liste des produits précédents
+                const productList = document.getElementById("product-list");
+                productList.innerHTML = '';  // Reset
+
+                // Ajouter les nouveaux produits
+                produitDetails.forEach(detail => {
+                    const row = document.createElement('tr');
+
+                    row.innerHTML = `
+                        <td>${detail.produit_nom}</td>
+                        <td>${detail.quantite}x</td>
+                        <td>${detail.prix_unitaire} FCFA</td>
+                        <td>${detail.total} FCFA</td>
+                        <td>${detail.date_expiration}</td>
+                    `;
+                    productList.appendChild(row);
+                });
+            }
+            
+            // Fermer les modales
+            function closeModal(modalId) {
+                document.getElementById(modalId).style.display = "none";
+            }
+
+            // Ferme les modales lorsque l'utilisateur clique en dehors du contenu
+            window.onclick = function(event) {
+                if (event.target === document.getElementById("product-popup")) {
+                    closeModal('product-popup');
+                } else if (event.target === document.getElementById("caissiereModal")) {
+                    closeModal('caissiereModal');
+                } else if (event.target === document.getElementById("clientModal")) {
+                    closeModal('clientModal');
+                }
+            };
+
+            // Ferme le popup lorsque l'utilisateur clique sur le bouton de fermeture
+            document.getElementById("close-popup").addEventListener("click", function() {
+                closeModal('product-popup');
+            });
+        </script>
+    {% endblock %} 

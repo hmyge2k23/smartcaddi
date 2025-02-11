@@ -1,0 +1,176 @@
+.mid {
+    max-width: 800px;
+    width: 100%; /* Ajuster à la largeur disponible jusqu'à 800px */
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+
+.main-content {
+    display: flex;
+    opacity: 0; /* Cache l'élément pour l'animation */
+    transform: translateY(20px); /* Commence plus bas pour un effet de slide */
+}
+
+.tabs {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-right: 2px solid #ddd;
+    padding-right: 20px;
+    margin-right: 20px;
+}
+
+.tabs ul li a {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+    display: block;
+    padding: 15px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.tabs ul li a.active {
+    color: #fff;
+    background-color: #007bff;
+    transform: scale(1.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Ajoute un effet d'ombre */
+}
+
+.tabs ul li {
+    list-style-type: none;
+    position: relative;
+    margin-left: 25px;
+    cursor: pointer; /* Ajoute un curseur pointer pour indiquer que l'élément est cliquable */
+}
+
+.tabs ul li::before {
+    content: ''; /* Crée un élément vide pour le cercle */
+    position: absolute;
+    left: -25px; /* Positionne le cercle à gauche du texte */
+    top: 50%;
+    transform: translateY(-50%); /* Centrer verticalement */
+    width: 12px; /* Largeur du cercle */
+    height: 12px; /* Hauteur du cercle */
+    border-radius: 50%; /* Rendre le cercle rond */
+    border: 2px solid #007bff; /* Ajouter une bordure autour du cercle */
+    background-color: transparent; /* Fond transparent par défaut */
+    transition: background-color 0.3s ease; /* Animation douce pour le changement de couleur */
+}
+
+/* Lorsque l'élément est survolé ou activé (focus), remplir le cercle */
+.tabs ul li:hover::before,
+.tabs ul li:focus::before,
+.tabs ul li.active::before {
+    background-color: #007bff; /* Remplit le cercle avec la couleur bleue */
+}
+
+
+.content {
+    flex: 3;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f4f4f4;
+}
+
+.tab-content {
+    display: none;
+    opacity: 0; /* Initialement caché pour l'animation */
+}
+
+.tab-content.active {
+    display: block;
+    opacity: 1;
+    animation: fadeIn 0.8s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+h2 {
+    font-size: 22px;
+    color: #000000;
+    margin-bottom: 20px;
+    animation: slideInLeft 1s ease-out;
+}
+
+.profile-pic-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    animation: slideInLeft 1s ease-out;
+}
+
+.profile-pic {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 20px;
+    transition: transform 0.3s ease;
+}
+
+.profile-pic:hover {
+    transform: rotate(360deg) scale(1.1); /* Ajoute une rotation et un agrandissement */
+}
+
+.btn-edit-pic {
+    padding: 12px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 120px;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-edit-pic:hover {
+    background-color: #0056b3;
+    transform: scale(1.1);
+}
+
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.form-group input {
+    width: calc(100% - 20px);
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+}
+
+button {
+    width: 50%;
+    padding: 12px;
+    background-color: #010d2e;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}

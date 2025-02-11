@@ -1,0 +1,344 @@
+/* Styles généraux */
+body {
+  font-family: Arial, sans-serif; /* Police de caractère */
+  margin: 0; /* Suppression de la marge par défaut */
+  padding: 0; /* Suppression du remplissage par défaut */
+  background-color: #f7f7f7; /* Couleur de fond de la page */
+}
+
+header {
+  background-color: #fff; /* Couleur d'arrière-plan du header */
+  color: white; /* Couleur du texte dans le header */
+  padding: 15px; /* Espacement interne */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+.profile {
+  display: flex; /* Affichage flex */
+  justify-content: flex-end; /* Alignement à droite */
+  align-items: center; /* Alignement vertical centré */
+  position: relative; /* Position relative pour les sous-menus */
+}
+
+.info {
+  margin-right: 10px; /* Marge à droite */
+  text-align: right; /* Alignement du texte à droite */
+}
+
+.info p {
+  color: #000;
+  margin: 0; /* Pas de marge */
+  font-size: 16px; /* Taille de police */
+}
+
+.info small {
+  color: #ccc; /* Couleur grise pour le texte secondaire */
+  font-size: 12px; /* Taille de police pour le texte secondaire */
+}
+
+
+.profile_uuy img {
+  width: 40px; /* Largeur de l'image de profil */
+  border-radius: 50%; /* Arrondi complet */
+  cursor: pointer; /* Curseur pointer */
+}
+
+.user-pic {
+  width: 40px; /* Largeur de l'image de profil */
+  height: 40px; /* Hauteur de l'image de profil */
+  border-radius: 50%; /* Arrondir l'image de profil */
+  margin-left: 10px; /* Marge à gauche de l'image */
+}
+
+.history {
+  max-width: 1200px; /* Largeur maximale du conteneur */
+  margin: 20px auto; /* Centrer le conteneur horizontalement */
+  padding: 20px; /* Espacement interne */
+  background-color: white; /* Couleur de fond du conteneur */
+  border-radius: 8px; /* Arrondir les coins */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ombre pour effet de profondeur */
+}
+
+h1 {
+  text-align: center; /* Centrer le titre */
+  color: #333; /* Couleur du titre */
+}
+
+/* Styles du tableau */
+.ticket-table {
+  width: 100%; /* Prend toute la largeur */
+  /* border-collapse: collapse; */
+  border-spacing: 0px;
+  margin-top: 20px; /* Marge supérieure */
+}
+
+.ticket-table th,
+.ticket-table td {
+  padding: 10px; /* Espacement interne pour les cellules */
+  text-align: left; /* Alignement du texte à gauche */
+  border: 1px solid #ddd; /* Bordure en bas des cellules */
+}
+
+.ticket-table th {
+  background-color: #051922; /* Couleur de fond pour l'en-tête */
+  color: white; /* Couleur du texte dans l'en-tête */
+}
+
+/* Eye icon */
+.eye-icon {
+  width: 24px; /* Largeur de l'icône */
+  cursor: pointer; /* Curseur pointer */
+  padding: 10px; /* Espacement intérieur */
+  border: 1px solid #024047; /* Couleur de bordure */
+  border-radius: 10px; /* Bords arrondis */
+  background-color: #f9f9f9; /* Couleur de fond */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre pour effet de profondeur */
+  transition: box-shadow 0.3s ease, transform 0.3s ease; /* Animation sur l'encadrement */
+}
+
+.eye-icon:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Ombre augmentée au survol */
+  transform: scale(1.02); /* Légère augmentation de la taille au survol */
+}
+
+/* Styles pour le sous-menu */
+.sub-menu-wrap {
+  position: absolute; /* Position absolue */
+  top: 80px; /* Positionnement par rapport au haut */
+  right: 0; /* Positionnement par rapport à droite */
+  width: 250px; /* Largeur du sous-menu */
+  background-color: #fff; /* Couleur de fond */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Ombre */
+  border-radius: 10px; /* Coins arrondis */
+  overflow: hidden; /* Masque le débordement */
+  transform: scale(0); /* Échelle initiale */
+  transform-origin: top right; /* Origine de la transformation */
+  transition: transform 0.3s ease; /* Transition douce pour l'ouverture */
+}
+
+.sub-menu-wrap.open-menu {
+  transform: scale(1); /* Ouvrir le menu */
+}
+
+.sub-menu {
+  padding: 20px; /* Espacement intérieur */
+}
+
+.user_info {
+  display: flex; /* Affichage flex */
+  align-items: center; /* Alignement vertical centré */
+  margin-bottom: 15px; /* Espacement inférieur */
+}
+
+.user_info img {
+  border-radius: 50%; /* Arrondi complet pour l'image */
+  width: 40px; /* Largeur de l'image */
+  margin-right: 10px; /* Marge à droite */
+}
+
+.user_info h2 {
+  font-size: 18px; /* Taille de police du titre */
+  margin: 0; /* Pas de marge */
+}
+
+hr {
+  border: none; /* Pas de bordure */
+  border-top: 1px solid #ddd; /* Bordure supérieure */
+  margin: 10px 0; /* Marge autour */
+}
+
+.sub-menu-link {
+  display: flex; /* Affichage flex */
+  align-items: center; /* Alignement vertical centré */
+  padding: 0px 0; /* Pas de remplissage */
+  color: #333; /* Couleur du texte */
+  text-decoration: none; /* Pas de soulignement */
+  cursor: pointer; /* Curseur pointer */
+  transition: background-color 0.3s ease; /* Transition douce */
+}
+
+.sub-menu-link img {
+  width: 20px; /* Largeur de l'image dans le lien */
+  margin-right: 10px; /* Marge à droite */
+}
+
+.sub-menu-link span {
+  margin-left: auto; /* Espace automatique à gauche */
+}
+
+.sub-menu-link:hover {
+  background-color: #f0f0f0; /* Couleur de fond au survol */
+}
+
+/* Styles pour le popup des produits */
+.product-popup {
+  display: none; /* Cacher le popup par défaut */
+  position: fixed; /* Position fixe */
+  top: 0; /* Aligné avec le haut de la fenêtre */
+  left: 0; /* Aligné avec le côté gauche de la fenêtre */
+  width: 100%; /* Prend toute la largeur de la fenêtre */
+  height: 100%; /* Prend toute la hauteur de la fenêtre */
+  background-color: rgba(0, 0, 0, 0.7); /* Arrière-plan semi-transparent */
+  z-index: 1000; /* Au-dessus des autres éléments */
+}
+
+/* Contenu du popup */
+.popup-content {
+  background-color: white; /* Couleur de fond du contenu du popup */
+  padding: 20px; /* Espacement intérieur */
+  border-radius: 10px; /* Coins arrondis */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombre */
+  width: 90%; /* Largeur à 90% de l'écran */
+  max-width: 600px; /* Largeur maximum */
+  position: absolute; /* Positionner en absolu par rapport au parent */
+  top: 50%; /* Positionner à 50% du haut */
+  left: 50%; /* Positionner à 50% de la gauche */
+  transform: translate(-50%, -50%); /* Centrer horizontalement et verticalement */
+}
+
+/* Liste des produits dans le modal */
+.product-table {
+  width: 100%; /* Prend toute la largeur */
+  border-collapse: collapse; /* Supprime l'espace entre les bordures */
+}
+
+.product-table th,
+.product-table td {
+  padding: 10px; /* Espacement interne pour les cellules */
+  text-align: left; /* Alignement du texte à gauche */
+  border: 1px solid #ddd; /* Bordure en bas des cellules */
+}
+
+.product-table th {
+  background-color: #F28123; /* Couleur de fond pour l'en-tête du produit */
+  color: white; /* Couleur du texte dans l'en-tête du produit */
+}
+
+/* Bouton de fermeture du popup */
+.close-btn {
+  background-color: #F28123;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer; /* Curseur pointer */
+  font-size: 24px; /* Taille de la police */
+  color: #fff; /* Couleur principale pour le texte */
+  position: absolute; /* Positionnement absolu */
+  top: 10px; /* Positionnement par rapport au haut */
+  right: 10px; /* Positionnement par rapport à droite */
+}
+
+.mtable {
+  width: 100%;
+  /* border-collapse: collapse; */
+  border-spacing: 0px;
+  margin-bottom: 20px;
+}
+
+.mtable thead {
+  background-color: #051922;
+  color: #fff;
+}
+
+.mtable th, .mtable td {
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.mtable tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+  width: 100%;
+  padding: 8px;
+  margin: 4px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.bform {
+  text-align: center;
+}
+
+
+.bform button {
+  background-color: #F28123;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.bform button:hover {
+  background-color: #db7521;
+}
+
+
+/* Styles de la modale */
+.modal {
+    display: none; /* Masquer par défaut */
+    position: fixed; 
+    z-index: 1; 
+    left: 0; 
+    top: 0; 
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto; 
+    padding: 15px;
+    border: 1px solid #888;
+    width: 50%; 
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Styles pour le corps de la modale des produits */
+.product-table-container {
+    max-height: 300px; /* Hauteur maximale pour la liste des produits */
+    overflow-y: auto; /* Défilement vertical */
+    margin-top: 4px; /* Espace entre l'en-tête et la table */
+}
+
+.modal-body {
+  background-color: #ccc;
+  border-radius: 10px;
+  padding: 5px;
+  margin-top: 15px;
+}
+
+.modal-body1 {
+  border-radius: 10px;
+  margin-top: 15px;
+}
+
+.modal-header {
+  font-weight: bold;
+  font-size: 25px;
+}

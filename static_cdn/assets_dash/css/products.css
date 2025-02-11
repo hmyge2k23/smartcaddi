@@ -1,0 +1,253 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    border: 0;
+    list-style: none;
+    appearance: none;
+}
+
+
+:root {
+    --color-light: #F7F7F7;
+    --color-dark: #051922;
+    --color-primary: #F28123; 
+    --color-white: #FFFFFF; 
+    --color-success: #8AC53E; 
+    --color-danger: #FF0000; 
+    ----purple-----: #6f42c1;
+    ----indigo-----: #6610f2;
+    ----pink-----: #d63384;
+    ----orange-----: #fd7e14;
+    ----yellow-----: #ffc107;
+    ----green-----: #198754;
+    ----teals-----: #20c997;
+    ----gray-----: #adb5bd;
+    ----cyan-----: #0dcaf0, #00FFFF;
+
+
+    
+    --border-radius-1: 8px; 
+    --border-radius-2: 12px;
+    
+    --card-padding: 16px; /* Rembourrage de la carte */
+    --card-border-radius: 20px; /* Rayon de bordure de la carte */
+    
+    --box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1); /* Ombre de la boîte */
+}
+
+main span {
+    color: gray;
+}
+
+
+em {
+    font-size: 10px;
+    font-weight: bold;
+}
+
+h2 {
+    font-family: Algerian;
+}
+
+header p b {
+    font-size: 16px;
+    color: #F28123;
+}
+
+
+body {
+    font-family: 'Poppins', 'sans-serif';
+    width: 100vw;
+    height: 100vh;
+    font-size: 0.88rem;
+    user-select: none;
+    overflow-x: hidden;
+}
+
+.container {
+    display: grid;
+    width: 96%;
+    gap: 1.8rem;
+    grid-template-columns: auto 215px;
+    margin: 0 auto;
+}
+
+aside {
+    position: fixed;
+    width: 14rem;
+    height: 50vh;
+    z-index: 9999;
+}
+
+aside .top {
+    /* background-color: #F28123; */
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+    margin-top: 1.0rem;
+}
+
+aside .top div.close {
+    display: none;
+}
+
+aside .sidebar {
+    background-color: #051922;
+    border-radius: 15px;
+    height: calc(100vh - 4rem); 
+    position: relative;
+    top: 0.6rem;
+}
+
+aside .sidebar a {
+    display: flex;
+    color: white;
+    margin-left: 2rem;
+    gap: 1rem;
+    align-items: center;
+    height: 3.2rem;
+    transition: all .1s ease-in-out;
+}
+
+aside .sidebar a:hover,
+aside .sidebar a.active {
+    background: #F28123;
+    color: white;
+    margin-left: 0;
+    border-left: 5px solid white;
+    border-radius: 10px;
+}
+
+aside .logo {
+    color: black;
+    display: flex;
+    align-items: center;
+}
+
+aside .sidebar a span {
+    font-size: 1.6rem;
+    transition: all 0.1s ease-in;
+}
+
+
+aside .sidebar a:last-child {
+    position: absolute;
+    bottom: 1rem;
+    width: 100%;
+}
+
+
+/* ====== main style ======  */
+
+main {
+    margin-left: 16rem; /* pour compenser la largeur de l'aside fixe */
+    border-right: 2px solid #F0F0F0;
+    border-left: 2px solid #F0F0F0;
+    padding: 11px 40px 10px 0px;
+}
+
+
+main header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+main header h5 {
+    font-size: 18px;
+    font-weight: normal;
+}
+
+main .separator {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+main .separator .info h3 {
+    font-size: 30px;
+}
+
+main .separator .search {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+main .separator .search i {
+    font-size: 20px;
+    color: #BDBDBD;
+}
+
+main .separator .search input {
+    border: none;
+    font-size: 14px;
+    width: 80px;
+    outline: none;
+}
+
+main .separator .search input::placeholder {
+    color: #BDBDBD;
+}
+
+
+/* ======= right style start =======  */
+
+:root {
+    --color-light: #f0f0f0;
+    --color-primary: #007bff;
+    --border-radius-1: 5px;
+}
+
+.right-section {
+    margin-top: 0.9rem;
+    position: fixed; 
+    right: 10px; 
+}
+
+.right-section .nav {
+    display: flex;
+    justify-content: end;
+    gap: 1rem;
+}
+
+.right-section .dark-mode {
+    background-color: var(--color-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 1.6rem;
+    width: 4rem;
+    cursor: pointer;
+    border-radius: var(--border-radius-1);
+}
+
+.right-section .dark-mode span {
+    font-size: 1.2rem;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.right-section .dark-mode span.active {
+    background-color: var(--color-primary);
+    color: white;
+    border-radius: var(--border-radius-1);
+}
+
+.right-section .nav .profile {
+    display: flex;
+    gap: 2rem;
+    text-align: right;
+}
+
+/* ======= right style end =======  */

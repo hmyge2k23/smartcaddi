@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion Étudiant</title>
+    <link rel="stylesheet" href="{% static 'css_dash/login_logout.css' %}">
+
+    <script src="https://kit.fontawesome.com/aa346902c5.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <div>
+        
+    </div>
+
+    <div class="login-container">
+        <div class="login-box">
+                <img src="{% static 'assets_dash/images/dfrd-removebg-preview.png' %}" alt="Logo" class="logo">
+            <h2>Connexion</h2>
+            <form action="" method="POST">               
+                {% csrf_token %}
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <p style="color: red; margin-bottom: 18px; font-style: italic; font-weight: bold;">{{ message }}</p>
+                    {% endfor %}
+                {% endif %}
+                
+                <label for="email">Email / User</label>
+                <input type="text" name="user_email" placeholder="User ou Email">
+
+                <label for="password">Mot de passe</label>
+                <input type="password" name="password" placeholder="Mot de passe">
+                
+                <button type="submit" class="btn">Se Connecter</button>
+                <br>
+                <a href="{% url 'acceuil' %}" style="background-color: #051922; height: 40px; border-radius: 10px; display: inline-block; text-align: center;">
+                    <i class="fa-solid fa-house" style="color: #fff; font-size: 24px; line-height: 40px;"></i>
+                </a>
+                            
+            </form>
+        </div>
+    </div>        
+
+</body>
+</html>
