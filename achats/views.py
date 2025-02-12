@@ -15,6 +15,8 @@ from django.views.decorators.cache import cache_control
 from django.contrib.auth.decorators import login_required
 from django.core.files import File
 
+import logging
+logger = logging.getLogger(__name__)
 
 
 # Page Acceuil 
@@ -196,7 +198,8 @@ def generate_unique_code():
 @login_required(login_url='login')
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)     
 def payement(request):
-    
+    # Verifier si l'utilisateur est connecté
+    logger.info(f"Session active: {request.user.is_authenticated}")
     if request.method == 'GET':
         
         transaction_id = request.GET.get('transaction_id')
@@ -208,12 +211,14 @@ def payement(request):
         
         code_verification = generate_unique_code()
         
+        
         if transaction_id:
             
             if transaction['status'] == 'SUCCESS':
                 try:
                     client_info = transaction['client']
                     montant_paie = transaction['amount']
+                    
                     
                     # Enregistrer le paiement réussi
                     paiement = Paiement(
@@ -312,6 +317,13 @@ def payement(request):
 @login_required(login_url='login')
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def payment_status(request):
+    
+    # Vérification si l'utilisateur est toujours authentifié
+    if not request.user.is_authenticated:
+        logger.warning(f"Utilisateur déconnecté avant le callback: {request.user}")
+        return redirect('login')  # Ou afficher une page d'erreur personnalisée
+
+    
     code_verification = request.session.get('code_verification')
     status = request.session.get('status')
     qr_image_url = request.session.get('qr_image_url')

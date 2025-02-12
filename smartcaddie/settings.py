@@ -34,7 +34,7 @@ ALLOWED_HOSTS = ['*']
 
 # Autoriser les domaines de confiances
 CSRF_TRUSTED_ORIGINS = [
-    'https://smartcaddie.localto.net',  # Remplacez par l'URL générée par LocaltoNet
+    # 'https://smartcaddie.localto.net',  # Remplacez par l'URL générée par LocaltoNet
 ]
 
 
